@@ -3,15 +3,15 @@
 
 def part_one(input_list):
 
-    print(f'Part one - : {None}')
+    return None
 
 
 def part_two(input_list):
 
-    print(f'Part two - : {None}')
+    return None
 
 
 if __name__ == "__main__":
     contents_list = open("input.txt", "r", encoding="utf-8").read().splitlines()
-    part_one(contents_list)
-    part_two(contents_list)
+    print(f"Part one - : {part_one(contents_list)}")
+    print(f"Part two - : {part_two(contents_list)}")
