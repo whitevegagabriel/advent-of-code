@@ -32,8 +32,7 @@ def listify(index, string):
 
 def is_in_right_order(sub_packet_one, sub_packet_two):
     # Perform integer comparison if possible.
-    if isinstance(sub_packet_one, int) and isinstance(
-            sub_packet_two, int):
+    if isinstance(sub_packet_one, int) and isinstance(sub_packet_two, int):
         if sub_packet_one == sub_packet_two:
             # inconclusive
             return None
@@ -51,7 +50,8 @@ def is_in_right_order(sub_packet_one, sub_packet_two):
         sub_packet_one_item = sub_packet_one[index]
         sub_packet_two_item = sub_packet_two[index]
 
-        right_order = is_in_right_order(sub_packet_one_item, sub_packet_two_item)
+        right_order = is_in_right_order(sub_packet_one_item,
+                                        sub_packet_two_item)
         if right_order is not None:
             return right_order
 
@@ -69,7 +69,7 @@ def partition(unsorted, low, high):
     swap_index = low
     for index, item in enumerate(unsorted[low:high]):
         if is_in_right_order(item, pivot):
-            unsorted[low+index] = unsorted[swap_index]
+            unsorted[low + index] = unsorted[swap_index]
             unsorted[swap_index] = item
             swap_index += 1
 
@@ -101,9 +101,9 @@ def part_two(input_list):
     packets = [[[2]], [[6]]]
     for i in range(0, len(input_list) + 1, 3):
         packets.append(listify(0, input_list[i])[0])
-        packets.append(listify(0, input_list[i+1])[0])
+        packets.append(listify(0, input_list[i + 1])[0])
 
-    quick_sort(packets, 0, len(packets)-1)
+    quick_sort(packets, 0, len(packets) - 1)
 
     decoder_key = 1
     for index, packet in enumerate(packets):

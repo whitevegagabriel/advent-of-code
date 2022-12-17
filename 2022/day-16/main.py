@@ -4,6 +4,7 @@ from copy import copy
 import time
 from functools import lru_cache
 
+
 def find_starting_valve(valve_list, starting_valve_name):
     valves = dict()
     next_valve_names = dict()
@@ -22,13 +23,12 @@ def find_starting_valve(valve_list, starting_valve_name):
     for valve_name in valves.keys():
         for next_valve_name in next_valve_names[valve_name]:
             valves[valve_name].next_valves.add(valves[next_valve_name])
-            
-            
+
     unopened_valves = []
     for valve in valves.values():
         if valve.flow_rate > 0:
             unopened_valves.append(valve)
-            
+
     unopened_valves.sort()
     return valves[starting_valve_name], tuple(unopened_valves)
 
@@ -42,18 +42,19 @@ class Valve:
         self.flow_rate = flow_rate
         self.name = name
         self.next_valves = set()
-        
+
     def __lt__(self, other):
         return self.name < other.name
-    
+
     def __gt__(self, other):
         return self.name > other.name
-    
+
     def __eq__(self, other):
         return self.name == other.name
-    
+
     def __hash__(self):
         return hash(self.name)
+
 
 @lru_cache(maxsize=None)
 def distance_between(start, end):
@@ -73,19 +74,21 @@ def distance_between(start, end):
             for next_v in curr.next_valves:
                 if next_v not in visited:
                     to_visit.appendleft(next_v)
-                    
+
     return distance
 
-def calculate_max_pressure_released_1(starting_valve, unopened_valves, starting_minutes, cache):
+
+def calculate_max_pressure_released_1(starting_valve, unopened_valves,
+                                      starting_minutes, cache):
     names = [v.name for v in unopened_valves]
     names.sort()
     id = (starting_valve.name, ",".join(names), starting_minutes)
-    
+
     if id in cache:
         return cache[id]
-    
+
     max_pressure_released = 0
-    
+
     for unopened_valve in unopened_valves:
         if unopened_valve == starting_valve:
             continue
@@ -99,12 +102,13 @@ def calculate_max_pressure_released_1(starting_valve, unopened_valves, starting_
             new_unopened_valves.remove(unopened_valve)
             pressure_released = minutes_left * unopened_valve.flow_rate
             if minutes_left >= 2:
-                pressure_released = pressure_released + calculate_max_pressure_released_1(unopened_valve, new_unopened_valves, minutes_left, cache)
-            max_pressure_released = max(max_pressure_released, pressure_released)
-        
-    
-    cache[id] = max_pressure_released    
-    
+                pressure_released = pressure_released + calculate_max_pressure_released_1(
+                    unopened_valve, new_unopened_valves, minutes_left, cache)
+            max_pressure_released = max(max_pressure_released,
+                                        pressure_released)
+
+    cache[id] = max_pressure_released
+
     return max_pressure_released
 
 
@@ -122,18 +126,25 @@ def stringify(valves):
 
 
 #@lru_cache(maxsize=1000000)
-def calculate_max_pressure_released_2(starting_valve, unopened_valves, starting_minutes, max_scores, superset):
+def calculate_max_pressure_released_2(starting_valve, unopened_valves,
+                                      starting_minutes, max_scores, superset):
     for unopened_valve in unopened_valves:
         new_unopened_valves = list(unopened_valves)
         new_unopened_valves.remove(unopened_valve)
         key = stringify(new_unopened_valves)
         key_complement = stringify(new_unopened_valves)
         if key not in max_scores and key_complement not in max_scores:
-            max_scores[key] = calculate_max_pressure_released_1(starting_valve, new_unopened_valves, starting_minutes, dict())
-            max_scores[key] += calculate_max_pressure_released_1(starting_valve, complement(new_unopened_valves, superset), starting_minutes, dict())
+            max_scores[key] = calculate_max_pressure_released_1(
+                starting_valve, new_unopened_valves, starting_minutes, dict())
+            max_scores[key] += calculate_max_pressure_released_1(
+                starting_valve, complement(new_unopened_valves, superset),
+                starting_minutes, dict())
             max_scores[key_complement] = max_scores[key]
-        
-            calculate_max_pressure_released_2(starting_valve, tuple(new_unopened_valves), starting_minutes, max_scores, superset)
+
+            calculate_max_pressure_released_2(starting_valve,
+                                              tuple(new_unopened_valves),
+                                              starting_minutes, max_scores,
+                                              superset)
 
 
 def part_one(input_list):
@@ -141,19 +152,24 @@ def part_one(input_list):
 
     starting_minutes = 30
 
-    return calculate_max_pressure_released_1(starting_valve, list(unopened_valves), starting_minutes, dict())
+    return calculate_max_pressure_released_1(starting_valve,
+                                             list(unopened_valves),
+                                             starting_minutes, dict())
 
 
 def part_two(input_list):
     starting_valve, unopened_valves = find_starting_valve(input_list, "AA")
-    
+
     starting_minutes = 26
-    
+
     max_scores = dict()
-    
-    calculate_max_pressure_released_2(starting_valve, unopened_valves, starting_minutes, max_scores, unopened_valves)
+
+    calculate_max_pressure_released_2(starting_valve, unopened_valves,
+                                      starting_minutes, max_scores,
+                                      unopened_valves)
 
     return max(max_scores.values())
+
 
 if __name__ == "__main__":
     contents_list = open("input.txt", "r").read().splitlines()

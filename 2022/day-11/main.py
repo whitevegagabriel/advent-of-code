@@ -29,16 +29,22 @@ def create_monkeys(monkey_descriptions):
 
     parse_length = 7
     for i in range(0, len(monkey_descriptions), parse_length):
-        description = monkey_descriptions[i:i+parse_length]
+        description = monkey_descriptions[i:i + parse_length]
 
         monkey_list.append(Monkey())
         monkey_list.monkeys[-1].identity = int(description[0].split()[1][:-1])
-        monkey_list.monkeys[-1].items = [int(num) for num in description[1].split(":")[1].split(",")]
-        monkey_list.monkeys[-1].operation = get_operation_lambda(description[2].split("=")[1])
+        monkey_list.monkeys[-1].items = [
+            int(num) for num in description[1].split(":")[1].split(",")
+        ]
+        monkey_list.monkeys[-1].operation = get_operation_lambda(
+            description[2].split("=")[1])
         monkey_list.monkeys[-1].post_operation = lambda num: num // 3
-        monkey_list.monkeys[-1].divisibility = int(description[3].split("by ")[1])
-        monkey_list.monkeys[-1].test_true_target = int(description[4].split("monkey ")[1])
-        monkey_list.monkeys[-1].test_false_target = int(description[5].split("monkey ")[1])
+        monkey_list.monkeys[-1].divisibility = int(
+            description[3].split("by ")[1])
+        monkey_list.monkeys[-1].test_true_target = int(
+            description[4].split("monkey ")[1])
+        monkey_list.monkeys[-1].test_false_target = int(
+            description[5].split("monkey ")[1])
 
     modulo = 1
     for monkey in monkey_list.monkeys:
@@ -124,6 +130,7 @@ def part_two(input_list):
 
 
 if __name__ == "__main__":
-    contents_list = open("input.txt", "r", encoding="utf-8").read().splitlines()
+    contents_list = open("input.txt", "r",
+                         encoding="utf-8").read().splitlines()
     part_one(contents_list)
     part_two(contents_list)

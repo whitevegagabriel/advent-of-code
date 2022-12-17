@@ -3,12 +3,15 @@ import re
 
 
 def is_overlapping(first_pair: list[int], second_pair: list[int]) -> bool:
-    return not (first_pair[0] > second_pair[1] or second_pair[0] > first_pair[1])
+    return not (first_pair[0] > second_pair[1]
+                or second_pair[0] > first_pair[1])
 
 
-def is_fully_overlapping(first_pair: list[int], second_pair: list[int]) -> bool:
+def is_fully_overlapping(first_pair: list[int],
+                         second_pair: list[int]) -> bool:
     return (first_pair[0] <= second_pair[0] and first_pair[1] >= second_pair[1]
-            or second_pair[0] <= first_pair[0] and second_pair[1] >= first_pair[1])
+            or second_pair[0] <= first_pair[0]
+            and second_pair[1] >= first_pair[1])
 
 
 def part_one(input_list: list):

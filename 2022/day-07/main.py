@@ -37,8 +37,7 @@ class File:
         return self.size
 
     def equals(self, other):
-        return (self.name == other.name
-                and self.parent == other.parent
+        return (self.name == other.name and self.parent == other.parent
                 and isinstance(other, File))
 
 
@@ -66,6 +65,7 @@ def get_filetree(commands):
 
     return root
 
+
 def get_directories(top_level_directory):
     directories = [top_level_directory]
 
@@ -75,11 +75,13 @@ def get_directories(top_level_directory):
 
     return directories
 
+
 def part_one(input_list):
     filetree = get_filetree(input_list)
     directories = get_directories(filetree)
 
-    dir_sum = sum([dir.get_size() for dir in directories if dir.get_size() <= 100000])
+    dir_sum = sum(
+        [dir.get_size() for dir in directories if dir.get_size() <= 100000])
 
     print(f'Part one - : {dir_sum}')
 
@@ -89,12 +91,16 @@ def part_two(input_list):
     directories = get_directories(filetree)
 
     required_space = filetree.get_size() + 30_000_000 - 70_000_000
-    min_deletable_folder_size = min([item.get_size() for item in directories if item.get_size() >= required_space])
+    min_deletable_folder_size = min([
+        item.get_size() for item in directories
+        if item.get_size() >= required_space
+    ])
 
     print(f'Part two - : {min_deletable_folder_size}')
 
 
 if __name__ == "__main__":
-    contents_list = open("input.txt", "r", encoding="utf-8").read().splitlines()
+    contents_list = open("input.txt", "r",
+                         encoding="utf-8").read().splitlines()
     part_one(contents_list)
     part_two(contents_list)

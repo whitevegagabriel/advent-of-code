@@ -1,5 +1,6 @@
 #!/bin/python3
 
+
 class Choice():
     rock = 0
     paper = 1
@@ -33,6 +34,7 @@ class Choice():
         self.identity = (self.identity - 1) % 3
         self.value = self.identity + 1
 
+
 def part_one(input_list: list):
     total_score = 0
     for choices in input_list:
@@ -49,6 +51,7 @@ def part_one(input_list: list):
         total_score += score_add
 
     print(f"Part one - : {total_score}")
+
 
 def part_two(input_list: list):
     total_score = 0
@@ -71,6 +74,7 @@ def part_two(input_list: list):
         total_score += score_add
 
     print(f"Part two - : {total_score}")
+
 
 if __name__ == "__main__":
     contents_list = open("input.txt").read().splitlines()

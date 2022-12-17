@@ -12,6 +12,7 @@ def part_two(input_list):
 
 
 if __name__ == "__main__":
-    contents_list = open("input.txt", "r", encoding="utf-8").read().splitlines()
+    contents_list = open("input.txt", "r",
+                         encoding="utf-8").read().splitlines()
     print(f"Part one - : {part_one(contents_list)}")
     print(f"Part two - : {part_two(contents_list)}")

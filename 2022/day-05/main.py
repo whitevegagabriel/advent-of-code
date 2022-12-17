@@ -17,7 +17,7 @@ def get_stacks_as_list(input_list: list) -> list:
     base_index = get_base_index(input_list)
 
     max_cols = int(max(input_list[base_index].split()))
-    
+
     # initialize stacks to correct number of columns
     stacks_list = [[] for i in range(max_cols)]
     # isolate the stacks and reverse to traverse bottom->top
@@ -25,11 +25,10 @@ def get_stacks_as_list(input_list: list) -> list:
         # normalize the row
         row = row[1:]
 
-
         # find the ith letter in a row and append to the stacks if not a blank space
         step_size = 4
         for i in range(max_cols):
-            potential_letter = row[i*step_size]
+            potential_letter = row[i * step_size]
             if potential_letter != " ":
                 stacks_list[i].append(potential_letter)
     return stacks_list
@@ -39,8 +38,10 @@ def get_moves_as_list(input_list: list) -> list:
     base_index = get_base_index(input_list)
 
     moves_list = []
-    for move in input_list[base_index+2:]:
-        move = move.replace("move ", "").replace(" from ", " ").replace(" to ", " ").split()
+    for move in input_list[base_index + 2:]:
+        move = move.replace("move ", "").replace(" from ",
+                                                 " ").replace(" to ",
+                                                              " ").split()
         moves_list.append(move)
     return moves_list
 
@@ -57,7 +58,7 @@ def part_one(input_list: list):
         for _ in range(move_quant):
             letter = stacks_list[from_stack].pop()
             stacks_list[to_stack].append(letter)
-    
+
     top_of_stacks = [stack[-1] for stack in stacks_list]
 
     print(f'Part one - : {"".join(top_of_stacks)}')
@@ -75,13 +76,14 @@ def part_two(input_list: list):
         letters = stacks_list[from_stack][-move_quant:]
         stacks_list[from_stack] = stacks_list[from_stack][:-move_quant]
         stacks_list[to_stack] += letters
-    
+
     top_of_stacks = [stack[-1] for stack in stacks_list]
 
     print(f'Part two - : {"".join(top_of_stacks)}')
 
 
 if __name__ == "__main__":
-    contents_list = open("input.txt", "r", encoding="utf-8").read().splitlines()
+    contents_list = open("input.txt", "r",
+                         encoding="utf-8").read().splitlines()
     part_one(contents_list)
     part_two(contents_list)

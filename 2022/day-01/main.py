@@ -1,5 +1,6 @@
 #!/bin/python3
 
+
 def update_max(num_list: list, num: int) -> list:
     if num > num_list[0]:
         num_list[2] = num_list[1]
@@ -12,6 +13,8 @@ def update_max(num_list: list, num: int) -> list:
         num_list[2] = num
 
     return num_list
+
+
 def part_one(calories_list: list):
     partial_sum = 0
     max_sum = 0
@@ -22,8 +25,9 @@ def part_one(calories_list: list):
             partial_sum = 0
         else:
             partial_sum += int(calorie)
-    
+
     print(f"Part one - max calories: {max_sum}")
+
 
 def part_two(calories_list: list):
     partial_sum = 0
@@ -39,6 +43,7 @@ def part_two(calories_list: list):
     max_sum = sum(max_sums)
 
     print(f"Part two - top three max sum: {max_sum}")
+
 
 if __name__ == "__main__":
     contents_list = open("input.txt").read().splitlines()
