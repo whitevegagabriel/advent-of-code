@@ -1,4 +1,5 @@
 #!/bin/python3
+import helper
 
 
 def part_one(input_list):
