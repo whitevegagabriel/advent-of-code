@@ -20,7 +20,8 @@ def parse_ints_from_string(chars):
 
 
 def tuplify(listy_input):
-    if not isinstance(listy_input, list) and not isinstance(listy_input, tuple):
+    if not isinstance(listy_input, list) and not isinstance(
+            listy_input, tuple):
         return listy_input
 
     if isinstance(listy_input, list):
@@ -35,7 +36,8 @@ def tuplify(listy_input):
 
 
 def listify(tuply_input):
-    if not isinstance(tuply_input, list) and not isinstance(tuply_input, tuple):
+    if not isinstance(tuply_input, list) and not isinstance(
+            tuply_input, tuple):
         return tuply_input
 
     if isinstance(tuply_input, list):
