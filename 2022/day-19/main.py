@@ -89,17 +89,17 @@ def get_max_geodes(blueprint, state):
             if robot_type == 3 and obsidian_robots == 0:
                 continue
             # if production of obsidian + stock exceeds cost to build one geode robot until rounds run out
-            elif robot_type == 2 and ((
-                    obsidian_robots * curr_mins_left +
-                    obsidian_stock) >= blueprint[3][2] * curr_mins_left or clay_robots == 0):
+            elif robot_type == 2 and (
+                (obsidian_robots * curr_mins_left + obsidian_stock) >=
+                    blueprint[3][2] * curr_mins_left or clay_robots == 0):
                 continue
             # if production of clay + stock exceeds cost to build one obsidian robot until rounds run out
             elif robot_type == 1 and (clay_robots * curr_mins_left + clay_stock
-                                   ) >= blueprint[2][1] * curr_mins_left:
+                                      ) >= blueprint[2][1] * curr_mins_left:
                 continue
             # if production of ore + stock exceeds cost to build any robot once until rounds run out
-            elif robot_type == 0 and (ore_robots * curr_mins_left +
-                                   ore_stock) >= max_ore_cost * curr_mins_left:
+            elif robot_type == 0 and (ore_robots * curr_mins_left + ore_stock
+                                      ) >= max_ore_cost * curr_mins_left:
                 continue
 
             new_resources = helper.subtract_tuples(stock_tuple, robot_cost)
