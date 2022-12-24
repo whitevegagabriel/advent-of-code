@@ -1,0 +1,284 @@
+#!/bin/python3
+import sys
+import helper
+
+
+class MoveHandler:
+    moves = ""
+    index = 0
+    direction = 0
+    direction_indeces = [">", "v", "<", "^"]
+        
+    def __init__(self, moves):
+        self.moves = moves
+
+    def get_next_move(self, curr_dir):
+        self.direction = self.direction_indeces.index(curr_dir)
+        for move in self.moves[self.index:]:
+            if move.isdigit():
+                break
+            else:
+                self.rotate(move)
+            self.index += 1
+        
+        buffer = ""
+        for move in self.moves[self.index:]:
+            if not move.isdigit():
+                return [int(buffer), self.direction_indeces[self.direction]]
+            else:
+                buffer = buffer + move
+            self.index += 1
+        
+        if self.index == len(self.moves):
+            self.index += 1
+            return [int(buffer), self.direction_indeces[self.direction]]
+        return None
+
+    def rotate(self, direction):
+        if direction == "R":
+            self.direction = (self.direction + 1) % 4
+        else:
+            self.direction = (self.direction - 1) % 4
+
+
+class Face:
+    origin = (0, 0)
+    neighbors = None
+
+    def __init__(self, origin):
+        self.origin = origin
+
+
+def get_initial_pos(board, direction, dir_loc):
+    if direction == "row":
+        index = 0
+        for char in board[dir_loc]:
+            if char != " ":
+                return [dir_loc, index]
+            index += 1
+    else:
+        index = 0
+        for line in board:
+            if line[dir_loc] != " ":
+                return [index, dir_loc]
+            index += 1
+
+
+def get_final_pos(board, direction, dir_loc):
+    if direction == "row":
+        index = len(board[0]) - 1
+        for char in reversed(board[dir_loc]):
+            if char != " ":
+                return [dir_loc, index]
+            index -= 1
+    else:
+        index = len(board) - 1
+        for line in reversed(board):
+            if line[dir_loc] != " ":
+                return [index, dir_loc]
+            index -= 1
+
+
+def get_next_pos(curr_pos, curr_dir, teleportations):
+    teleportation_key = (tuple(curr_pos), curr_dir)
+    if teleportation_key in teleportations:
+        curr_pos, curr_dir = teleportations[teleportation_key]
+        return list(curr_pos), curr_dir
+
+    curr_pos = curr_pos[:]
+    match curr_dir:
+        case ">":
+            curr_pos[1] += 1
+        case "<":
+            curr_pos[1] -= 1
+        case "^":
+            curr_pos[0] -= 1
+        case "v":
+            curr_pos[0] += 1
+    
+    return curr_pos, curr_dir
+
+
+def make_move(board, curr_pos, next_move, teleportations):
+    qty, curr_dir = next_move
+    for _ in range(1, qty + 1):
+        prev_pos, prev_dir = curr_pos, curr_dir
+        curr_pos, curr_dir = get_next_pos(prev_pos, prev_dir, teleportations)
+        if board[curr_pos[0]][curr_pos[1]] == "#":
+            return prev_pos, prev_dir
+    return curr_pos, curr_dir
+
+
+def get_board(input_list):
+    board = input_list[:-2]
+    max_width = 0
+    for line in board:
+        max_width = max(max_width, len(line))
+    
+    for i, line in enumerate(board):
+        missing_width = max_width - len(line)
+        board[i] += " " * missing_width
+    return board
+
+
+def get_flat_teleportations(board):
+    teleportations = dict()
+    for i in range(len(board)):
+        initial_pos = tuple(get_initial_pos(board, "row", i))
+        final_pos = tuple(get_final_pos(board, "row", i))
+        teleportations[(initial_pos, "<")] = (final_pos, "<")
+        teleportations[(final_pos, ">")] = (initial_pos, ">")
+    for i in range(len(board[0])):
+        initial_pos = tuple(get_initial_pos(board, "col", i))
+        final_pos = tuple(get_final_pos(board, "col", i))
+        teleportations[(initial_pos, "^")] = (final_pos, "^")
+        teleportations[(final_pos, "v")] = (initial_pos, "v")
+    return teleportations
+
+
+def get_edge(origin, direction, width):
+    edge = []
+    base = None
+    mod = None
+    match direction:
+        case ">":
+            base = (origin[0], origin[1] + width - 1)
+            mod = (1, 0)
+        case "v":
+            base = (origin[0] + width - 1, origin[1])
+            mod = (0, 1)
+        case "<":
+            base = origin
+            mod = (1, 0)
+        case "^":
+            base = origin
+            mod = (0, 1)
+    for i in range(width):
+        edge.append(helper.add_tuples(base, mod, i))
+    return edge
+
+
+def get_cube_teleportations(board, faces):
+    teleportations = dict()
+    width = min(len(row.strip()) for row in board)
+
+    direction_indeces = MoveHandler.direction_indeces[:]
+
+    for face in faces.values():
+        origin = face.origin
+        for direction, neighbor_state in face.neighbors.items():
+            neighbor = faces[neighbor_state[0]]
+            neighbor_orientation = neighbor_state[1]
+            neighbor_edge_direction = direction_indeces[
+                (direction_indeces.index(direction) + 2 - neighbor_orientation) % len(direction_indeces)]
+            orig_face_edge = get_edge(origin, direction, width)
+            dest_face_edge = get_edge(neighbor.origin, neighbor_edge_direction, width)
+
+            if (direction in [">", "<"] and neighbor_orientation in [2, 3]) \
+                    or (direction in ["^", "v"] and neighbor_orientation in [1, 2]):
+                dest_face_edge.reverse()
+
+            moving_direction = direction_indeces[
+                (direction_indeces.index(direction) - neighbor_orientation) % len(direction_indeces)]
+            for i in range(len(orig_face_edge)):
+                pos1 = orig_face_edge[i]
+                pos2 = dest_face_edge[i]
+                teleportations[(pos1, direction)] = (pos2, moving_direction)
+
+    return teleportations
+
+
+def get_neighbor(face, direction, faces):
+    if (neighbor := face.neighbors[direction]) is not None:
+        return neighbor
+    directions = MoveHandler.direction_indeces
+    direction_index = directions.index(direction)
+    to_ask = None
+    match direction:
+        case ">":
+            to_ask = "^"
+        case "v":
+            to_ask = ">"
+        case "<":
+            to_ask = "v"
+        case "^":
+            to_ask = "<"
+    to_ask_neighbor = get_neighbor(face, to_ask, faces)
+    new_direction = directions[(direction_index - to_ask_neighbor[1]) % 4]
+    unrotated = get_neighbor(faces[to_ask_neighbor[0]], new_direction, faces)
+    rotated = (unrotated[0], (unrotated[1] + to_ask_neighbor[1] + 1) % 4)
+    face.neighbors[direction] = rotated
+    return rotated
+
+
+def get_faces(board):
+    width = min(len(row.strip()) for row in board)
+    faces = dict()
+    vertices = dict()
+    id_counter = 1
+
+    # Initialize known faces
+    for i in range(width):
+        for j in range(width):
+            vert_loc = i * width
+            horz_loc = j * width
+            vertex = (vert_loc, horz_loc)
+            if vert_loc < len(board) and horz_loc < len(board[0]) and board[vert_loc][horz_loc] != " ":
+                vertices[vertex] = (id_counter, 0)
+                faces[id_counter] = Face(vertex)
+                id_counter += 1
+
+    # Initialize known face neighbors
+    for face in faces.values():
+        vert_loc, horz_loc = face.origin
+        face.neighbors = {
+            ">": vertices[(vert_loc, horz_loc + width)] if (vert_loc, horz_loc + width) in vertices else None,
+            "v": vertices[(vert_loc + width, horz_loc)] if (vert_loc + width, horz_loc) in vertices else None,
+            "<": vertices[(vert_loc, horz_loc - width)] if (vert_loc, horz_loc - width) in vertices else None,
+            "^": vertices[(vert_loc - width, horz_loc)] if (vert_loc - width, horz_loc) in vertices else None,
+        }
+
+    # Fill unknown face neighbors
+    for face in faces.values():
+        for direction, neighbor in face.neighbors.items():
+            if neighbor is not None:
+                continue
+            face.neighbors[direction] = get_neighbor(face, direction, faces)
+
+    return faces
+
+
+def traverse_board(board, move_handler, teleportations):
+    curr_pos = get_initial_pos(board, "row", 0)
+    curr_dir = ">"
+
+    while (next_move := move_handler.get_next_move(curr_dir)) is not None:
+        curr_pos, curr_dir = make_move(board, curr_pos, next_move, teleportations)
+
+    return 1000 * (curr_pos[0] + 1) + 4 * (curr_pos[1] + 1) + move_handler.direction_indeces.index(curr_dir)
+
+
+def part_one(input_list):
+    board = get_board(input_list)
+    move_handler = MoveHandler(input_list[-1])
+    teleportations = get_flat_teleportations(board)
+    
+    return traverse_board(board, move_handler, teleportations)
+
+
+def part_two(input_list):
+    board = get_board(input_list)
+    move_handler = MoveHandler(input_list[-1])
+    teleportations = get_cube_teleportations(board, get_faces(board))
+
+    return traverse_board(board, move_handler, teleportations)
+
+
+if __name__ == "__main__":
+    input_file = "input.txt"
+    if len(sys.argv) == 2 and sys.argv[1] == "test":
+        input_file = "test.txt"
+
+    contents_list = open(input_file, "r", encoding="utf-8").read().splitlines()
+    print(f"Part one - : {part_one(contents_list)}")
+    print(f"Part two - : {part_two(contents_list)}")
