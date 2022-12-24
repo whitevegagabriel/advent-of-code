@@ -1,0 +1,167 @@
+#!/bin/python3
+import collections
+import math
+import sys
+import helper
+from copy import deepcopy
+from queue import PriorityQueue
+
+
+def get_initial_position(board):
+    return 0, board[0].index(".")
+
+
+def get_final_position(board):
+    return len(board) - 1, board[-1].index(".")
+
+
+def get_initial_state(board):
+    state = {
+        "<": [],
+        ">": [],
+        "^": [],
+        "v": [],
+    }
+    edges = set()
+    for vert, row in enumerate(board):
+        for horz, char in enumerate(row):
+            if char in ["<", ">", "^", "v"]:
+                state[char].append((vert, horz))
+            elif char == "#":
+                edges.add((vert, horz))
+    return state, edges
+
+
+def tuplify_state(state):
+    return tuple(state["<"]), tuple(state[">"]), tuple(state["^"]), tuple(state["v"])
+
+
+def update_state(board, state):
+    width = len(board[0])
+    height = len(board)
+    state = deepcopy(state)
+    for blizzard, positions in state.items():
+        new_positions = positions[:]
+        match blizzard:
+            case "<":
+                for position in positions:
+                    new_positions.remove(position)
+                    new_pos = [position[0], position[1] - 1]
+                    if new_pos[1] == 0:
+                        new_pos[1] = width - 2
+                    new_positions.append(tuple(new_pos))
+            case ">":
+                for position in positions:
+                    new_positions.remove(position)
+                    new_pos = [position[0], position[1] + 1]
+                    if new_pos[1] == width - 1:
+                        new_pos[1] = 1
+                    new_positions.append(tuple(new_pos))
+            case "^":
+                for position in positions:
+                    new_positions.remove(position)
+                    new_pos = [position[0] - 1, position[1]]
+                    if new_pos[0] == 0:
+                        new_pos[0] = height - 2
+                    new_positions.append(tuple(new_pos))
+            case "v":
+                for position in positions:
+                    new_positions.remove(position)
+                    new_pos = [position[0] + 1, position[1]]
+                    if new_pos[0] == height - 1:
+                        new_pos[0] = 1
+                    new_positions.append(tuple(new_pos))
+        state[blizzard] = new_positions
+    return state
+
+
+def get_next_moves(curr_pos):
+    next_moves = [curr_pos]
+    directions = [
+        (-1, 0),
+        (1, 0),
+        (0, -1),
+        (0, 1),
+    ]
+
+    for direction in directions:
+        next_move = helper.add_tuples(curr_pos, direction)
+        next_moves.append(next_move)
+
+    return next_moves
+
+
+def get_covered(covered_positions, counter):
+    return covered_positions[counter % len(covered_positions)]
+
+
+def get_final_move(curr_pos, final_pos, turns, covered_positions, edges):
+    to_process = collections.deque()
+    seen = set()
+    to_process.appendleft((turns, curr_pos))
+    seen.add((turns, curr_pos))
+    while len(to_process) > 0:
+        turns, curr_pos = to_process.pop()
+        if curr_pos == final_pos:
+            return turns
+        new_turns = turns + 1
+        covered = get_covered(covered_positions, new_turns)
+        for move in get_next_moves(curr_pos):
+            if move in edges or move in covered:
+                continue
+            move_state = (new_turns, move)
+            if move_state not in seen:
+                to_process.appendleft(move_state)
+                seen.add(move_state)
+
+
+def generate_states(board, state):
+    h = len(board) - 2
+    w = len(board[0]) - 2
+    lcm = math.lcm(h, w)
+    covered_positions = []
+    for _ in range(lcm):
+        covered = set()
+        for positions in state.values():
+            helper.add_items_to_set(covered, positions)
+        covered_positions.append(covered)
+        state = update_state(board, state)
+
+    return covered_positions
+
+
+def part_one(input_list):
+    initial_pos = get_initial_position(input_list)
+    final_pos = get_final_position(input_list)
+    state, edges = get_initial_state(input_list)
+    edges.add((initial_pos[0] - 1, initial_pos[1]))
+    edges.add((final_pos[0] + 1, final_pos[1]))
+
+    turns = get_final_move(initial_pos, final_pos, 0, generate_states(input_list, state), edges)
+
+    return turns
+
+
+def part_two(input_list):
+    initial_pos = get_initial_position(input_list)
+    final_pos = get_final_position(input_list)
+    curr_state, edges = get_initial_state(input_list)
+    edges.add((initial_pos[0] - 1, initial_pos[1]))
+    edges.add((final_pos[0] + 1, final_pos[1]))
+    states = generate_states(input_list, curr_state)
+
+    turns = get_final_move(initial_pos, final_pos, 0, states, edges)
+    turns = get_final_move(final_pos, initial_pos, turns, states, edges)
+    turns = get_final_move(initial_pos, final_pos, turns, states, edges)
+
+    return turns
+
+
+if __name__ == "__main__":
+    input_file = "input.txt"
+    if len(sys.argv) == 2 and sys.argv[1] == "test":
+        input_file = "test.txt"
+
+    contents_list = open(input_file, "r", encoding="utf-8").read().splitlines()
+    print(f"Part one - : {part_one(contents_list)}")
+    print(f"Part two - : {part_two(contents_list)}")
