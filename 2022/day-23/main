@@ -1,0 +1,126 @@
+#!/bin/python3
+import sys
+import helper
+from copy import copy
+
+
+def get_elves(input_list):
+    elves = set()
+    for vert_pos, row in enumerate(input_list):
+        for horz_pos, loc in enumerate(row):
+            if loc == "#":
+                elves.add((vert_pos, horz_pos))
+    return elves
+
+
+def get_surrounding_elves(elf, elves):
+    surrounding_elves = set()
+    locdations = [
+        (-1, -1),
+        (-1, 0),
+        (-1, 1),
+        (0, -1),
+        (0, 1),
+        (1, -1),
+        (1, 0),
+        (1, 1),
+    ]
+
+    for location in locdations:
+        new_elf = helper.add_tuples(elf, location)
+        if new_elf in elves:
+            surrounding_elves.add(new_elf)
+    return surrounding_elves
+
+
+def get_positions_in_direction(elf, direction):
+    positions = set()
+    directions = {
+        "n": [(-1, -1), (-1, 0), (-1, 1)],
+        "s": [(1, -1), (1, 0), (1, 1)],
+        "w": [(-1, -1), (0, -1), (1, -1)],
+        "e": [(-1, 1), (0, 1), (1, 1)],
+    }
+
+    for location in directions[direction]:
+        positions.add(helper.add_tuples(elf, location))
+    return positions
+
+
+def get_position_in_direction(elf, direction):
+    directions = {
+        "n": (-1, 0),
+        "s": (1, 0),
+        "w": (0, -1),
+        "e": (0, 1),
+    }
+    return helper.add_tuples(elf, directions[direction])
+
+def move_elves(elves, starting_direction):
+    elves = copy(elves)
+    proposed_moves = dict()
+    proposed_positions = dict()
+    all_proposed_positions = set()
+    directions = ["n", "s", "w", "e"]
+
+    for elf in elves:
+        surrounding_elves = get_surrounding_elves(elf, elves)
+        if len(surrounding_elves) == 0:
+            continue
+
+        for i in range(len(directions)):
+            direction = directions[(starting_direction + i) % len(directions)]
+            positions = get_positions_in_direction(elf, direction)
+
+            if not surrounding_elves.isdisjoint(positions):
+                continue
+
+            new_position = get_position_in_direction(elf, direction)
+            if new_position not in all_proposed_positions:
+                all_proposed_positions.add(new_position)
+                proposed_moves[elf] = new_position
+                proposed_positions[new_position] = elf
+            elif new_position in proposed_positions:
+                elf = proposed_positions.pop(new_position)
+                proposed_moves.pop(elf)
+            break
+
+    for elf, position in proposed_moves.items():
+        elves.remove(elf)
+        elves.add(position)
+
+    return elves
+
+def part_one(input_list):
+    elves = get_elves(input_list)
+
+    for i in range(10):
+        elves = move_elves(elves, i % 4)
+
+    min_horz = min(horz for vert, horz in elves)
+    max_horz = max(horz for vert, horz in elves)
+    min_vert = min(vert for vert, horz in elves)
+    max_vert = max(vert for vert, horz in elves)
+
+    return (max_horz - min_horz + 1) * (max_vert - min_vert + 1) - len(elves)
+
+
+def part_two(input_list):
+    elves = get_elves(input_list)
+
+    counter = 0
+    while (new_elves := move_elves(elves, counter % 4)) != elves:
+        elves = new_elves
+        counter += 1
+
+    return counter + 1
+
+
+if __name__ == "__main__":
+    input_file = "input.txt"
+    if len(sys.argv) == 2 and sys.argv[1] == "test":
+        input_file = "test.txt"
+
+    contents_list = open(input_file, "r", encoding="utf-8").read().splitlines()
+    print(f"Part one - : {part_one(contents_list)}")
+    print(f"Part two - : {part_two(contents_list)}")
