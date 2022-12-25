@@ -1,0 +1,85 @@
+#!/bin/python3
+import sys
+import helper
+
+
+def snafu_to_list(snafu):
+    snafu_list = []
+    snafus = {
+        "2": 2,
+        "1": 1,
+        "0": 0,
+        "-": -1,
+        "=": -2,
+    }
+    for char in snafu:
+        snafu_list.append(snafus[char])
+    return snafu_list
+
+
+def snafu_to_num(snafu):
+    snafu = snafu_to_list(snafu)
+    exp = len(snafu) - 1
+    sum = 0
+    for num in snafu:
+        sum += num * (5**exp)
+        exp -= 1
+    return sum
+
+
+def snafu_list_to_num(snafu_list):
+    total = 0
+    for i, num in enumerate(snafu_list):
+        exp = len(snafu_list) - i - 1
+        total += num * (5**exp)
+    return total
+
+
+def num_to_snafu_list(num):
+    max_exp = 0
+    while 5**max_exp < num:
+        max_exp += 1
+    snafu_list = [2]*max_exp
+    for i in range(len(snafu_list)):
+        while snafu_list_to_num(snafu_list) >= num:
+            snafu_list[i] -= 1
+        snafu_list[i] += 1
+    return snafu_list
+
+
+def num_to_snafu(num):
+    snafu_list = num_to_snafu_list(num)
+    snafus = {
+        2: "2",
+        1: "1",
+        0: "0",
+        -1: "-",
+        -2: "=",
+    }
+    snafu_num = ""
+    for snafu in snafu_list:
+        snafu_num += snafus[snafu]
+    return snafu_num
+
+
+def part_one(input_list):
+    total = 0
+    for snafu in input_list:
+        total += snafu_to_num(snafu)
+
+    return num_to_snafu(total)
+
+
+def part_two(input_list):
+
+    return "Merry Christmas!"
+
+
+if __name__ == "__main__":
+    input_file = "input.txt"
+    if len(sys.argv) == 2 and sys.argv[1] == "test":
+        input_file = "test.txt"
+
+    contents_list = open(input_file, "r", encoding="utf-8").read().splitlines()
+    print(f"Part one: {part_one(contents_list)}")
+    print(f"Part two: {part_two(contents_list)}")

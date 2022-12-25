@@ -19,5 +19,5 @@ if __name__ == "__main__":
         input_file = "test.txt"
 
     contents_list = open(input_file, "r", encoding="utf-8").read().splitlines()
-    print(f"Part one - : {part_one(contents_list)}")
-    print(f"Part two - : {part_two(contents_list)}")
+    print(f"Part one: {part_one(contents_list)}")
+    print(f"Part two: {part_two(contents_list)}")
