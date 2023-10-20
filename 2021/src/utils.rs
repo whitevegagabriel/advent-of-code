@@ -1,9 +1,22 @@
 use itertools::Itertools;
 
-pub fn parse_example_testcases(input: &Vec<String>) -> Vec<TestCase> {
-    // find indeces of test case boundaries
-    let indeces_iter = input
-        .iter()
+pub type SolverFn = fn(&[&str]) -> (u32, u32);
+
+#[allow(dead_code)]
+pub fn basic_test(input: &str, test: SolverFn) {
+    let examples = parse_example_testcases(input);
+    for (idx, example) in examples.iter().enumerate() {
+        println!("Example {}", idx + 1);
+        let (answer1, answer2) = test(&example.problem);
+        assert_eq!(example.answer1, answer1);
+        assert_eq!(example.answer2, answer2);
+    }
+}
+
+pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
+    // find indices of test case boundaries
+    let indices_vec = input
+        .lines()
         .enumerate()
         .filter_map(|(idx, line)| {
             if line.starts_with("-------------------------------") {
@@ -15,7 +28,7 @@ pub fn parse_example_testcases(input: &Vec<String>) -> Vec<TestCase> {
         .collect_vec();
 
     // assumes the format "answer_x: i"
-    fn parse_u32_from_string(input: &String) -> u32 {
+    fn parse_u32_from_string(input: &str) -> u32 {
         let maybe_num = input.split(':').last().unwrap().trim();
 
         if maybe_num == "-" {
@@ -24,19 +37,26 @@ pub fn parse_example_testcases(input: &Vec<String>) -> Vec<TestCase> {
         maybe_num.parse().unwrap()
     }
 
-    indeces_iter
+    indices_vec
         .chunks(3)
-        .map(|indeces| {
-            let (start, middle) = (indeces[0], indeces[1]);
+        .map(|indices| {
+            let (start, middle) = (indices[0], indices[1]);
             let problem = input
-                .get(start + 1..middle)
-                .unwrap()
-                .iter()
-                .map(String::from)
+                .lines()
+                .skip(start + 1)
+                .take(middle - start - 1)
                 .collect_vec();
 
-            let answer1: u32 = input.get(middle + 1).map(parse_u32_from_string).unwrap();
-            let answer2: u32 = input.get(middle + 2).map(parse_u32_from_string).unwrap();
+            let answer1: u32 = input
+                .lines()
+                .nth(middle + 1)
+                .map(parse_u32_from_string)
+                .unwrap();
+            let answer2: u32 = input
+                .lines()
+                .nth(middle + 2)
+                .map(parse_u32_from_string)
+                .unwrap();
 
             TestCase {
                 problem,
@@ -48,8 +68,8 @@ pub fn parse_example_testcases(input: &Vec<String>) -> Vec<TestCase> {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct TestCase {
-    pub problem: Vec<String>,
+pub struct TestCase<'a> {
+    pub problem: Vec<&'a str>,
     pub answer1: u32,
     pub answer2: u32,
 }
@@ -66,10 +86,7 @@ some text
 hello: 1
 world: 2
 -------------------------------
-"#
-    .lines()
-    .map(String::from)
-    .collect_vec();
+"#;
     let test_cases = parse_example_testcases(&input);
 
     assert_eq!(
@@ -104,10 +121,7 @@ sup
 hello: -
 world: 100
 -------------------------------
-"#
-    .lines()
-    .map(String::from)
-    .collect_vec();
+"#;
     let test_cases = parse_example_testcases(&input);
 
     assert_eq!(
