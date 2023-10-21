@@ -41,6 +41,7 @@ fn get_solver(day: u8) -> SolverFn {
     match day {
         1 => d01::solve,
         2 => d02::solve,
+        3 => d03::solve,
         _ => {
             panic!("pick another day");
         }
@@ -58,6 +59,11 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
             problem: problem.lines().collect_vec(),
             answer1: 1524750,
             answer2: 1592426537,
+        }],
+        3 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 738234,
+            answer2: 3969126,
         }],
         _ => {
             panic!("pick another day");

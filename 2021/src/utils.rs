@@ -67,6 +67,15 @@ pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
         .collect_vec()
 }
 
+pub fn transposed<T: Clone>(matrix: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+    let rows = matrix.len();
+    let cols = matrix[0].len();
+
+    (0..cols)
+        .map(|col| (0..rows).map(|row| matrix[row][col].clone()).collect_vec())
+        .collect_vec()
+}
+
 #[derive(Debug, PartialEq)]
 pub struct TestCase<'a> {
     pub problem: Vec<&'a str>,
@@ -139,4 +148,11 @@ world: 100
         ],
         test_cases
     );
+}
+
+#[test]
+fn transpose_valid_matrix() {
+    let matrix = vec![vec![1, 2, 3], vec![4, 5, 6]];
+    let matrix_t = transposed(&matrix);
+    assert_eq!(vec![vec![1, 4], vec![2, 5], vec![3, 6]], matrix_t)
 }
