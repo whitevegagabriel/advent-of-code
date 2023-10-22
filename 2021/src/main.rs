@@ -9,6 +9,7 @@ use utils::TestCase;
 mod d01;
 mod d02;
 mod d03;
+mod d04;
 mod utils;
 
 fn main() {
@@ -32,8 +33,8 @@ fn main() {
 
     for test_case in test_cases {
         let res = solver(&test_case.problem);
-        println!("Expected: {:?}", (test_case.answer1, test_case.answer2));
-        println!("Actual: {res:?}");
+        println!("Expected: |{:^10}|{:^10}|", test_case.answer1, test_case.answer2);
+        println!("Actual:   |{:^10}|{:^10}|", res.0, res.1);
     }
 }
 
@@ -42,6 +43,7 @@ fn get_solver(day: u8) -> SolverFn {
         1 => d01::solve,
         2 => d02::solve,
         3 => d03::solve,
+        4 => d04::solve,
         _ => {
             panic!("pick another day");
         }
@@ -64,6 +66,11 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
             problem: problem.lines().collect_vec(),
             answer1: 738234,
             answer2: 3969126,
+        }],
+        4 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 71708,
+            answer2: 34726,
         }],
         _ => {
             panic!("pick another day");
