@@ -69,7 +69,10 @@ pub fn solve(problem: &[&str]) -> (u32, u32) {
         .chunks(6)
         .map(|chunk| BingoBoard::parse(&chunk[1..]))
         .collect_vec();
-    (solve1(&bingo_numbers, &mut bingo_boards.clone()), solve2(&bingo_numbers, &mut bingo_boards.clone()))
+    (
+        solve1(&bingo_numbers, &mut bingo_boards.clone()),
+        solve2(&bingo_numbers, &mut bingo_boards.clone()),
+    )
 }
 
 fn solve1(bingo_numbers: &[u32], bingo_boards: &mut [BingoBoard]) -> u32 {
@@ -115,7 +118,6 @@ fn losing_board(
     }
     None
 }
-
 
 #[test]
 fn test() {
@@ -194,7 +196,9 @@ fn correct_unmarked_items_simple() {
     let mut bingo_board = BingoBoard::parse(&board);
     bingo_board.mark(13);
 
-    let mut expected = vec![17, 11, 0, 23, 4, 24, 14, 16, 7, 3, 18, 5, 20, 15, 19, 2, 9, 10, 12, 22, 21, 6, 1, 8];
+    let mut expected = vec![
+        17, 11, 0, 23, 4, 24, 14, 16, 7, 3, 18, 5, 20, 15, 19, 2, 9, 10, 12, 22, 21, 6, 1, 8,
+    ];
     expected.sort();
     let mut actual = bingo_board.unmarked_nums();
     actual.sort();
