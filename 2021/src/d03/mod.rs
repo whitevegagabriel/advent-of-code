@@ -1,11 +1,11 @@
 use crate::utils::transposed;
 use itertools::Itertools;
 
-pub fn solve(problem: &[&str]) -> (u32, u32) {
+pub fn solve(problem: &[&str]) -> (u64, u64) {
     (solve1(problem), solve2(problem))
 }
 
-fn solve1(problem: &[&str]) -> u32 {
+fn solve1(problem: &[&str]) -> u64 {
     let bit_rows = transposed(
         &problem
             .iter()
@@ -29,18 +29,18 @@ fn solve1(problem: &[&str]) -> u32 {
         })
         .join("");
 
-    let gamma_u32 = u32::from_str_radix(&gamma, 2).unwrap();
-    let epsilon_u32 = u32::from_str_radix(&epsilon, 2).unwrap();
-    gamma_u32 * epsilon_u32
+    let gamma_u64 = u64::from_str_radix(&gamma, 2).unwrap();
+    let epsilon_u64 = u64::from_str_radix(&epsilon, 2).unwrap();
+    gamma_u64 * epsilon_u64
 }
 
-fn solve2(problem: &[&str]) -> u32 {
+fn solve2(problem: &[&str]) -> u64 {
     let oxygen_rating = get_rating(&mut problem.to_vec(), |p, n| most_frequent_nth(p, n, '1'));
     let scrubber_rating = get_rating(&mut problem.to_vec(), |p, n| least_frequent_nth(p, n, '0'));
     oxygen_rating * scrubber_rating
 }
 
-fn get_rating(problem: &mut Vec<&str>, comparator: impl Fn(&[&str], usize) -> char) -> u32 {
+fn get_rating(problem: &mut Vec<&str>, comparator: impl Fn(&[&str], usize) -> char) -> u64 {
     let mut n = 0;
     while problem.len() > 1 {
         let cmp = comparator(problem, n);
@@ -48,7 +48,7 @@ fn get_rating(problem: &mut Vec<&str>, comparator: impl Fn(&[&str], usize) -> ch
         n += 1;
     }
     let rating = problem.first().unwrap();
-    u32::from_str_radix(rating, 2).unwrap()
+    u64::from_str_radix(rating, 2).unwrap()
 }
 
 fn most_frequent_nth(problem: &[&str], n: usize, default: char) -> char {

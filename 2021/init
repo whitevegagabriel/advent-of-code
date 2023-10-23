@@ -10,15 +10,15 @@ day=$(printf "%02d" $1)
 new_folder="src/d$day"
 mkdir $new_folder
 
-template='pub fn solve(problem: &[&str]) -> (u32, u32) {
+template='pub fn solve(problem: &[&str]) -> (u64, u64) {
     (solve1(), solve2())
 }
 
-fn solve1() -> u32 {
+fn solve1() -> u64 {
     0
 }
 
-fn solve2() -> u32 {
+fn solve2() -> u64 {
     0
 }
 

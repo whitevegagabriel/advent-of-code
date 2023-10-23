@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-pub type SolverFn = fn(&[&str]) -> (u32, u32);
+pub type SolverFn = fn(&[&str]) -> (u64, u64);
 
 #[allow(dead_code)]
 pub fn basic_test(input: &str, test: SolverFn) {
@@ -28,7 +28,7 @@ pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
         .collect_vec();
 
     // assumes the format "answer_x: i"
-    fn parse_u32_from_string(input: &str) -> u32 {
+    fn parse_u64_from_string(input: &str) -> u64 {
         let maybe_num = input.split(':').last().unwrap().trim();
 
         if maybe_num == "-" {
@@ -47,15 +47,15 @@ pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
                 .take(middle - start - 1)
                 .collect_vec();
 
-            let answer1: u32 = input
+            let answer1: u64 = input
                 .lines()
                 .nth(middle + 1)
-                .map(parse_u32_from_string)
+                .map(parse_u64_from_string)
                 .unwrap();
-            let answer2: u32 = input
+            let answer2: u64 = input
                 .lines()
                 .nth(middle + 2)
-                .map(parse_u32_from_string)
+                .map(parse_u64_from_string)
                 .unwrap();
 
             TestCase {
@@ -79,8 +79,8 @@ pub fn transposed<T: Clone>(matrix: &Vec<Vec<T>>) -> Vec<Vec<T>> {
 #[derive(Debug, PartialEq)]
 pub struct TestCase<'a> {
     pub problem: Vec<&'a str>,
-    pub answer1: u32,
-    pub answer2: u32,
+    pub answer1: u64,
+    pub answer2: u64,
 }
 
 #[test]

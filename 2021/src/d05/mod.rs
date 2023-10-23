@@ -1,33 +1,33 @@
 use itertools::Itertools;
 
-pub fn solve(problem: &[&str]) -> (u32, u32) {
+pub fn solve(problem: &[&str]) -> (u64, u64) {
     let lines = problem.iter().map(|s| Line::parse(s)).collect_vec();
     (solve1(&lines), solve2(&lines))
 }
 
-fn solve1(lines: &[Line]) -> u32 {
+fn solve1(lines: &[Line]) -> u64 {
     count_overlap(lines, |l| !l.is_diagonal())
 }
 
-fn solve2(lines: &[Line]) -> u32 {
+fn solve2(lines: &[Line]) -> u64 {
     count_overlap(lines, |_| true)
 }
 
-fn count_overlap(lines: &[Line], filter: impl Fn(&&Line) -> bool) -> u32 {
+fn count_overlap(lines: &[Line], filter: impl Fn(&&Line) -> bool) -> u64 {
     let coords = lines
         .iter()
         .filter(filter)
         .flat_map(|l| l.points.clone())
         .counts();
     let n_overlap = coords.iter().filter(|c| c.1 >= &2).count();
-    u32::try_from(n_overlap).unwrap()
+    u64::try_from(n_overlap).unwrap()
 }
 
 #[derive(Debug, PartialEq)]
 struct Line {
-    start: (u32, u32),
-    end: (u32, u32),
-    points: Vec<(u32, u32)>,
+    start: (u64, u64),
+    end: (u64, u64),
+    points: Vec<(u64, u64)>,
 }
 
 impl Line {
@@ -59,10 +59,10 @@ impl Line {
         Self { start, end, points }
     }
 
-    fn parse_point(input: &str) -> (u32, u32) {
+    fn parse_point(input: &str) -> (u64, u64) {
         input
             .split(',')
-            .map(|n| n.parse::<u32>().unwrap())
+            .map(|n| n.parse::<u64>().unwrap())
             .collect_tuple()
             .unwrap()
     }

@@ -1,8 +1,35 @@
 use itertools::Itertools;
 
+pub fn solve(problem: &[&str]) -> (u64, u64) {
+    let bingo_numbers = problem[0]
+        .split(',')
+        .map(|c| c.parse::<u64>().unwrap())
+        .collect_vec();
+    let bingo_boards = problem[1..]
+        .chunks(6)
+        .map(|chunk| BingoBoard::parse(&chunk[1..]))
+        .collect_vec();
+    (
+        solve1(&bingo_numbers, &mut bingo_boards.clone()),
+        solve2(&bingo_numbers, &mut bingo_boards.clone()),
+    )
+}
+
+fn solve1(bingo_numbers: &[u64], bingo_boards: &mut [BingoBoard]) -> u64 {
+    let (winning_board, last_bingo) = winning_board(bingo_numbers, bingo_boards.to_vec()).unwrap();
+    let winning_sum: u64 = winning_board.unmarked_nums().iter().sum();
+    last_bingo * winning_sum
+}
+
+fn solve2(bingo_numbers: &[u64], bingo_boards: &mut [BingoBoard]) -> u64 {
+    let (losing_board, last_bingo) = losing_board(bingo_numbers, bingo_boards.to_vec()).unwrap();
+    let losing_sum: u64 = losing_board.unmarked_nums().iter().sum();
+    last_bingo * losing_sum
+}
+
 #[derive(Clone)]
 struct BingoBoard {
-    board: [[Option<u32>; 5]; 5],
+    board: [[Option<u64>; 5]; 5],
     has_bingo: bool,
 }
 
@@ -12,12 +39,12 @@ impl BingoBoard {
             .iter()
             .map(|line| {
                 line.split_whitespace()
-                    .map(|s| Some(s.trim().parse::<u32>().unwrap()))
+                    .map(|s| Some(s.trim().parse::<u64>().unwrap()))
                     .collect_vec()
             })
             .collect_vec();
 
-        let mut board = [[Some(0_u32); 5]; 5];
+        let mut board = [[Some(0_u64); 5]; 5];
         for (idx, row) in board_vec.iter().enumerate() {
             board[idx].copy_from_slice(row);
         }
@@ -27,7 +54,7 @@ impl BingoBoard {
         }
     }
 
-    fn mark(&mut self, bingo_num: u32) {
+    fn mark(&mut self, bingo_num: u64) {
         let maybe_mark = self.matched_index(bingo_num);
         if let Some((row, col)) = maybe_mark {
             self.board[row][col].take();
@@ -44,7 +71,7 @@ impl BingoBoard {
         }
     }
 
-    fn matched_index(&self, bingo_num: u32) -> Option<(usize, usize)> {
+    fn matched_index(&self, bingo_num: u64) -> Option<(usize, usize)> {
         for (idx_r, row) in self.board.iter().enumerate() {
             for (idx_c, num) in row.iter().enumerate() {
                 if num == &Some(bingo_num) {
@@ -55,42 +82,15 @@ impl BingoBoard {
         None
     }
 
-    fn unmarked_nums(&self) -> Vec<u32> {
+    fn unmarked_nums(&self) -> Vec<u64> {
         self.board.into_iter().flatten().flatten().collect_vec()
     }
 }
 
-pub fn solve(problem: &[&str]) -> (u32, u32) {
-    let bingo_numbers = problem[0]
-        .split(',')
-        .map(|c| c.parse::<u32>().unwrap())
-        .collect_vec();
-    let bingo_boards = problem[1..]
-        .chunks(6)
-        .map(|chunk| BingoBoard::parse(&chunk[1..]))
-        .collect_vec();
-    (
-        solve1(&bingo_numbers, &mut bingo_boards.clone()),
-        solve2(&bingo_numbers, &mut bingo_boards.clone()),
-    )
-}
-
-fn solve1(bingo_numbers: &[u32], bingo_boards: &mut [BingoBoard]) -> u32 {
-    let (winning_board, last_bingo) = winning_board(bingo_numbers, bingo_boards.to_vec()).unwrap();
-    let winning_sum: u32 = winning_board.unmarked_nums().iter().sum();
-    last_bingo * winning_sum
-}
-
-fn solve2(bingo_numbers: &[u32], bingo_boards: &mut [BingoBoard]) -> u32 {
-    let (losing_board, last_bingo) = losing_board(bingo_numbers, bingo_boards.to_vec()).unwrap();
-    let losing_sum: u32 = losing_board.unmarked_nums().iter().sum();
-    last_bingo * losing_sum
-}
-
 fn winning_board(
-    bingo_numbers: &[u32],
+    bingo_numbers: &[u64],
     mut bingo_boards: Vec<BingoBoard>,
-) -> Option<(BingoBoard, u32)> {
+) -> Option<(BingoBoard, u64)> {
     for num in bingo_numbers {
         for board in bingo_boards.iter_mut() {
             board.mark(*num);
@@ -103,9 +103,9 @@ fn winning_board(
 }
 
 fn losing_board(
-    bingo_numbers: &[u32],
+    bingo_numbers: &[u64],
     mut bingo_boards: Vec<BingoBoard>,
-) -> Option<(BingoBoard, u32)> {
+) -> Option<(BingoBoard, u64)> {
     for num in bingo_numbers {
         for board in bingo_boards.iter_mut() {
             board.mark(*num);

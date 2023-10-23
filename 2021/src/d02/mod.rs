@@ -1,12 +1,12 @@
 use itertools::Itertools;
 
-pub fn solve(problem: &[&str]) -> (u32, u32) {
+pub fn solve(problem: &[&str]) -> (u64, u64) {
     let directions = problem
         .iter()
         .map(|line| {
             let mut split_line = line.split(' ');
             let dir = split_line.next().unwrap();
-            let qty = split_line.next().unwrap().parse::<u32>().unwrap();
+            let qty = split_line.next().unwrap().parse::<u64>().unwrap();
             match dir {
                 "up" => Movement::Up(qty),
                 "down" => Movement::Down(qty),
@@ -18,7 +18,7 @@ pub fn solve(problem: &[&str]) -> (u32, u32) {
     (solve1(&directions), solve2(&directions))
 }
 
-fn solve1(movements: &[Movement]) -> u32 {
+fn solve1(movements: &[Movement]) -> u64 {
     let mut down = 0;
     let mut forward = 0;
     for m in movements {
@@ -31,7 +31,7 @@ fn solve1(movements: &[Movement]) -> u32 {
     down * forward
 }
 
-fn solve2(movements: &[Movement]) -> u32 {
+fn solve2(movements: &[Movement]) -> u64 {
     let mut depth = 0;
     let mut forward = 0;
     let mut aim = 0;
@@ -49,9 +49,9 @@ fn solve2(movements: &[Movement]) -> u32 {
 }
 
 enum Movement {
-    Up(u32),
-    Down(u32),
-    Forward(u32),
+    Up(u64),
+    Down(u64),
+    Forward(u64),
 }
 
 #[test]
