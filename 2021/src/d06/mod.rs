@@ -25,7 +25,6 @@ fn fishes_after_days(fishes: &[u64], days: u64) -> u64 {
     fish_counts.iter().sum::<u64>()
 }
 
-
 #[test]
 fn test() {
     use crate::utils::basic_test;

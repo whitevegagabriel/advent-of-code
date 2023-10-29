@@ -16,11 +16,14 @@ pub fn basic_test(input: &str, test: SolverFn) {
 pub fn median_round_down(input: Vec<u64>) -> u64 {
     let mut input = input.to_vec();
     input.sort();
-    input[input.len()/2]
+    input[input.len() / 2]
 }
 
 pub fn parse_numbers(input: &str) -> Vec<u64> {
-    input.split(',').map(|n| n.parse::<u64>().unwrap()).collect_vec()
+    input
+        .split(',')
+        .map(|n| n.parse::<u64>().unwrap())
+        .collect_vec()
 }
 
 pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {

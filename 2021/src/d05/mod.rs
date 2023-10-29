@@ -38,7 +38,7 @@ impl Line {
             .collect_tuple()
             .unwrap();
 
-        let x =  if start.0 > end.0 {
+        let x = if start.0 > end.0 {
             (end.0..=start.0).rev().collect_vec() // this is wrong for certain diagonals
         } else {
             (start.0..=end.0).collect_vec()

@@ -1,5 +1,5 @@
-use itertools::Itertools;
 use crate::utils::{median_round_down, parse_numbers};
+use itertools::Itertools;
 
 pub fn solve(problem: &[&str]) -> (u64, u64) {
     let nums = parse_numbers(problem[0]);
@@ -13,12 +13,22 @@ fn solve1(crabs: Vec<u64>) -> u64 {
 
 fn solve2(crabs: &[u64]) -> u64 {
     let crab_counts = crabs.iter().counts();
-    let crab_counts = crab_counts.iter().map(|(pos, qty)| (**pos, u64::try_from(*qty).unwrap())).sorted().collect_vec();
+    let crab_counts = crab_counts
+        .iter()
+        .map(|(pos, qty)| (**pos, u64::try_from(*qty).unwrap()))
+        .sorted()
+        .collect_vec();
 
     // initialize variables
-    let mut fuel_cost = crab_counts.iter().map(|(pos, qty)| ((pos + 1) * ((pos + 1) + 1) / 2) * qty).sum::<u64>();
+    let mut fuel_cost = crab_counts
+        .iter()
+        .map(|(pos, qty)| ((pos + 1) * ((pos + 1) + 1) / 2) * qty)
+        .sum::<u64>();
     let mut inc = 0;
-    let mut dec = crab_counts.iter().map(|(pos, qty)| (pos + 1) * qty).sum::<u64>();
+    let mut dec = crab_counts
+        .iter()
+        .map(|(pos, qty)| (pos + 1) * qty)
+        .sum::<u64>();
     let mut num_crabs_on_left = 0;
     let mut num_crabs_on_right = crab_counts.iter().map(|(_, qty)| qty).sum::<u64>();
 
