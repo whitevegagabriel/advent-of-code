@@ -14,6 +14,7 @@ mod d05;
 mod d06;
 mod d07;
 mod d08;
+mod d09;
 mod utils;
 
 fn main() {
@@ -55,6 +56,7 @@ fn get_solver(day: u8) -> SolverFn {
         6 => d06::solve,
         7 => d07::solve,
         8 => d08::solve,
+        9 => d09::solve,
         _ => {
             panic!("pick another day");
         }
@@ -102,6 +104,11 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
             problem: problem.lines().collect_vec(),
             answer1: 532,
             answer2: 1011284,
+        }],
+        9 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 528,
+            answer2: 920448,
         }],
         _ => {
             panic!("pick another day");
