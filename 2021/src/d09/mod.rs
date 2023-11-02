@@ -1,3 +1,4 @@
+use crate::utils::get_cross_neighbors;
 use itertools::Itertools;
 use std::collections::{HashMap, LinkedList};
 
@@ -77,24 +78,11 @@ fn get_neighbors(
     heights: &HashMap<(usize, usize), u64>,
     point: &(usize, usize),
 ) -> Vec<((usize, usize), u64)> {
-    // coord, height
-    let point = (point.0 as i64, point.1 as i64);
-    let neighbors = [-1, 0, 1, 0]
-        .iter()
-        .zip([0, -1, 0, 1])
-        .filter_map(|diff| {
-            let row_new = usize::try_from(point.0 + diff.0);
-            let col_new = usize::try_from(point.1 + diff.1);
-            if let (Ok(row_new), Ok(col_new)) = (row_new, col_new) {
-                heights
-                    .get(&(row_new, col_new))
-                    .map(|h| ((row_new, col_new), *h))
-            } else {
-                None
-            }
-        })
-        .collect_vec();
+    let neighbors = get_cross_neighbors(point);
     neighbors
+        .iter()
+        .filter_map(|n| heights.get(n).map(|h| (*n, *h)))
+        .collect_vec()
 }
 
 #[test]

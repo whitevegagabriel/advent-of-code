@@ -1,50 +1,53 @@
-use std::collections::LinkedList;
-use itertools::Itertools;
 use crate::d10::ValidationResult::{Complete, Corrupted, Incomplete};
+use itertools::Itertools;
+use std::collections::LinkedList;
 
 pub fn solve(problem: &[&str]) -> (u64, u64) {
     (solve1(problem), solve2(problem))
 }
 
 fn solve1(problem: &[&str]) -> u64 {
-    problem.iter().filter_map(|l| {
-        match validate(l) {
+    problem
+        .iter()
+        .filter_map(|l| match validate(l) {
             Corrupted(c) => Some(c),
             _ => None,
-        }
-    }).map(|c| {
-        match c {
+        })
+        .map(|c| match c {
             ')' => 3,
             ']' => 57,
             '}' => 1197,
             '>' => 25137,
             _ => panic!("what?"),
-        }
-    }).sum()
+        })
+        .sum()
 }
 
 fn solve2(problem: &[&str]) -> u64 {
-    let scores = problem.iter().filter_map(|l| {
-        match validate(l) {
+    let scores = problem
+        .iter()
+        .filter_map(|l| match validate(l) {
             Incomplete(chars) => Some(chars),
             _ => None,
-        }
-    }).map(|chars| {
-        println!("{chars:?}");
-        let mut score = 0_u64;
-        for c in chars {
-            score *= 5;
-            score += match c {
-                '(' => 1,
-                '[' => 2,
-                '{' => 3,
-                '<' => 4,
-                _ => panic!("huh?"),
-            };
-        }
-        println!("{score}");
-        score
-    }).sorted().collect_vec();
+        })
+        .map(|chars| {
+            println!("{chars:?}");
+            let mut score = 0_u64;
+            for c in chars {
+                score *= 5;
+                score += match c {
+                    '(' => 1,
+                    '[' => 2,
+                    '{' => 3,
+                    '<' => 4,
+                    _ => panic!("huh?"),
+                };
+            }
+            println!("{score}");
+            score
+        })
+        .sorted()
+        .collect_vec();
     let midpoint = scores.len() / 2;
     scores[midpoint]
 }
@@ -60,11 +63,11 @@ fn validate(line: &str) -> ValidationResult {
     for c in line.chars() {
         if OPEN_BRACKETS.contains(&c) {
             stack.push_front(c);
-            continue
+            continue;
         }
         let next_bracket = stack.pop_front().unwrap_or_default();
         if c != closing_bracket_for(next_bracket) {
-            return Corrupted(c)
+            return Corrupted(c);
         }
     }
     if stack.is_empty() {

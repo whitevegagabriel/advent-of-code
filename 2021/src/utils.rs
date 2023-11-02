@@ -183,3 +183,69 @@ fn odd_median() {
     let median = median_round_down(input);
     assert_eq!(2, median);
 }
+
+pub fn get_cross_neighbors(point: &(usize, usize)) -> Vec<(usize, usize)> {
+    let point = (point.0 as i64, point.1 as i64);
+    [-1, 0, 1, 0]
+        .into_iter()
+        .zip([0, -1, 0, 1])
+        .filter_map(|diff| try_add_into_usize(&point, &diff))
+        .collect_vec()
+}
+
+pub fn get_square_neighbors(point: &(usize, usize)) -> Vec<(usize, usize)> {
+    let point = (point.0 as i64, point.1 as i64);
+    [-1, 0, 1, -1, 1, -1, 0, 1]
+        .into_iter()
+        .zip([-1, -1, -1, 0, 0, 1, 1, 1])
+        .filter_map(|diff| try_add_into_usize(&point, &diff))
+        .collect_vec()
+}
+
+fn try_add_into_usize(p1: &(i64, i64), p2: &(i64, i64)) -> Option<(usize, usize)> {
+    let row_new = usize::try_from(p1.0 + p2.0);
+    let col_new = usize::try_from(p1.1 + p2.1);
+    if let (Ok(row_new), Ok(col_new)) = (row_new, col_new) {
+        Some((row_new, col_new))
+    } else {
+        None
+    }
+}
+
+#[test]
+fn test_cross_neighbors() {
+    let point = (0, 0);
+    let mut neighbors = get_cross_neighbors(&point);
+    neighbors.sort();
+    assert_eq!(vec![(0, 1), (1, 0)], neighbors);
+
+    let point = (1, 1);
+    let mut neighbors = get_cross_neighbors(&point);
+    neighbors.sort();
+    assert_eq!(vec![(0, 1), (1, 0), (1, 2), (2, 1)], neighbors);
+}
+
+#[test]
+fn test_square_neighbors() {
+    let point = (0, 0);
+    let mut neighbors = get_square_neighbors(&point);
+    neighbors.sort();
+    assert_eq!(vec![(0, 1), (1, 0), (1, 1)], neighbors);
+
+    let point = (1, 1);
+    let mut neighbors = get_square_neighbors(&point);
+    neighbors.sort();
+    assert_eq!(
+        vec![
+            (0, 0),
+            (0, 1),
+            (0, 2),
+            (1, 0),
+            (1, 2),
+            (2, 0),
+            (2, 1),
+            (2, 2)
+        ],
+        neighbors
+    );
+}
