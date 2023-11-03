@@ -26,6 +26,10 @@ pub fn parse_numbers(input: &str) -> Vec<u64> {
         .collect_vec()
 }
 
+pub fn parse_all_numbers(input: &[&str]) -> Vec<Vec<u64>> {
+    input.iter().map(|l| parse_numbers(l)).collect()
+}
+
 pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
     // find indices of test case boundaries
     let indices_vec = input

@@ -1,5 +1,4 @@
-use crate::d11::DumboState::*;
-use crate::utils::get_square_neighbors;
+use crate::{d11::DumboState::*, utils::get_square_neighbors};
 use itertools::Itertools;
 use std::collections::HashMap;
 

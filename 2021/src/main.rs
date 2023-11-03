@@ -1,9 +1,8 @@
-use core::panic;
-use std::{env, fs::read_to_string};
-
 use crate::utils::SolverFn;
 use clap::Parser;
+use core::panic;
 use itertools::Itertools;
+use std::{env, fs::read_to_string};
 use utils::TestCase;
 
 mod d01;
@@ -18,6 +17,7 @@ mod d09;
 mod d10;
 mod d11;
 mod d12;
+mod d13;
 mod utils;
 
 fn main() {
@@ -47,7 +47,10 @@ fn main() {
         )
     });
 
-    println!("{}", printable_results.join("\n---------------------------------------\n"))
+    println!(
+        "{}",
+        printable_results.join("\n---------------------------------------\n")
+    )
 }
 
 fn get_solver(day: u8) -> SolverFn {
@@ -64,6 +67,7 @@ fn get_solver(day: u8) -> SolverFn {
         10 => d10::solve,
         11 => d11::solve,
         12 => d12::solve,
+        13 => d13::solve,
         _ => {
             panic!("pick another day");
         }
@@ -131,6 +135,11 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
             problem: problem.lines().collect_vec(),
             answer1: 4749,
             answer2: 123054,
+        }],
+        13 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 693,
+            answer2: 5989000983004226491,
         }],
         _ => {
             panic!("pick another day");

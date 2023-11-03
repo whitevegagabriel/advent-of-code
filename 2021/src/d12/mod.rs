@@ -8,11 +8,9 @@ pub fn solve(problem: &[&str]) -> (u64, u64) {
         let (l, r) = line.split('-').collect_tuple().unwrap();
         cave_map.entry(l).or_default().push(r);
         cave_map.entry(r).or_default().push(l);
-}
+    }
     (solve1(&cave_map), solve2(&cave_map))
 }
-
-
 
 fn solve1(cave: &HashMap<&str, Vec<&str>>) -> u64 {
     fn filter(curr_state: &State, next_location: &str) -> Option<State> {
@@ -56,7 +54,10 @@ fn solve2(cave: &HashMap<&str, Vec<&str>>) -> u64 {
     unique_paths(cave, filter)
 }
 
-fn unique_paths(cave: &HashMap<&str, Vec<&str>>, next_state_filter: impl Fn(&State, &str) -> Option<State>) -> u64 {
+fn unique_paths(
+    cave: &HashMap<&str, Vec<&str>>,
+    next_state_filter: impl Fn(&State, &str) -> Option<State>,
+) -> u64 {
     let start = State {
         location: "start".into(),
         visited: HashSet::from(["start".into()]),
@@ -74,9 +75,10 @@ fn unique_paths(cave: &HashMap<&str, Vec<&str>>, next_state_filter: impl Fn(&Sta
 
         let next_locations = cave.get(curr.location.as_str()).unwrap();
 
-        next_locations.iter().filter_map(|next_location| {
-            next_state_filter(&curr, next_location)
-        }).for_each(|state| to_visit.push_back(state));
+        next_locations
+            .iter()
+            .filter_map(|next_location| next_state_filter(&curr, next_location))
+            .for_each(|state| to_visit.push_back(state));
     }
     num_paths
 }
