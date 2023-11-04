@@ -18,6 +18,7 @@ mod d10;
 mod d11;
 mod d12;
 mod d13;
+mod d14;
 mod utils;
 
 fn main() {
@@ -42,7 +43,7 @@ fn main() {
     let mut printable_results = test_cases.iter().map(|test_case| {
         let res = solver(&test_case.problem);
         format!(
-            "Expected: |{:^13}|{:^13}|\nActual:   |{:^13}|{:^13}|",
+            "Expected: |{:^15}|{:^15}|\nActual:   |{:^15}|{:^15}|",
             test_case.answer1, test_case.answer2, res.0, res.1
         )
     });
@@ -68,6 +69,7 @@ fn get_solver(day: u8) -> SolverFn {
         11 => d11::solve,
         12 => d12::solve,
         13 => d13::solve,
+        14 => d14::solve,
         _ => {
             panic!("pick another day");
         }
@@ -140,6 +142,11 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
             problem: problem.lines().collect_vec(),
             answer1: 693,
             answer2: 5989000983004226491,
+        }],
+        14 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 3342,
+            answer2: 3776553567525,
         }],
         _ => {
             panic!("pick another day");
