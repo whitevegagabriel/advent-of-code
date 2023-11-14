@@ -2,7 +2,7 @@ use crate::utils::SolverFn;
 use clap::Parser;
 use core::panic;
 use itertools::Itertools;
-use std::{env, fs::read_to_string};
+use std::{env, fs::read_to_string, time};
 use utils::TestCase;
 
 mod d01;
@@ -19,6 +19,7 @@ mod d11;
 mod d12;
 mod d13;
 mod d14;
+mod d15;
 mod utils;
 
 fn main() {
@@ -41,10 +42,17 @@ fn main() {
     let solver = get_solver(cli.day);
 
     let mut printable_results = test_cases.iter().map(|test_case| {
+        let start = time::Instant::now();
         let res = solver(&test_case.problem);
+        let elapsed = start.elapsed();
+
         format!(
-            "Expected: |{:^15}|{:^15}|\nActual:   |{:^15}|{:^15}|",
-            test_case.answer1, test_case.answer2, res.0, res.1
+            "Elapsed: {} millis\nExpected: |{:^15}|{:^15}|\nActual:   |{:^15}|{:^15}|",
+            elapsed.as_millis(),
+            test_case.answer1,
+            test_case.answer2,
+            res.0,
+            res.1
         )
     });
 
@@ -70,6 +78,7 @@ fn get_solver(day: u8) -> SolverFn {
         12 => d12::solve,
         13 => d13::solve,
         14 => d14::solve,
+        15 => d15::solve,
         _ => {
             panic!("pick another day");
         }
@@ -147,6 +156,11 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
             problem: problem.lines().collect_vec(),
             answer1: 3342,
             answer2: 3776553567525,
+        }],
+        15 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 745,
+            answer2: 3002,
         }],
         _ => {
             panic!("pick another day");

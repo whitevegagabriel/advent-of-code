@@ -1,22 +1,12 @@
-use crate::{d11::DumboState::*, utils::get_square_neighbors};
+use crate::{
+    d11::DumboState::*,
+    utils::{get_square_neighbors, parse_and_map_matrix_of_nums},
+};
 use itertools::Itertools;
 use std::collections::HashMap;
 
 pub fn solve(problem: &[&str]) -> (u64, u64) {
-    let num_rows = problem.len();
-    let num_cols = problem[0].len();
-    let dumbos: HashMap<_, _> = (0..num_rows)
-        .cartesian_product(0..num_cols)
-        .map(|pos| {
-            let charge = problem[pos.0]
-                .chars()
-                .nth(pos.1)
-                .unwrap()
-                .to_digit(10)
-                .unwrap() as u8;
-            (pos, Charging(charge))
-        })
-        .collect();
+    let dumbos = parse_and_map_matrix_of_nums(problem, Charging);
     (solve1(dumbos.clone()), solve2(dumbos))
 }
 
@@ -85,7 +75,7 @@ fn maybe_increment_and_make_ready(dumbo: &mut DumboState) {
 
 #[derive(Clone, PartialEq, Eq)]
 enum DumboState {
-    Charging(u8),
+    Charging(u64),
     Ready,
     Flashed,
 }

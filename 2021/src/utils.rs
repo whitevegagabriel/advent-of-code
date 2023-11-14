@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use std::collections::HashMap;
 
 pub type SolverFn = fn(&[&str]) -> (u64, u64);
 
@@ -252,4 +253,70 @@ fn test_square_neighbors() {
         ],
         neighbors
     );
+}
+
+pub fn parse_matrix_of_nums(input: &[&str]) -> HashMap<(usize, usize), u64> {
+    parse_and_map_matrix_of_nums(input, |n| n)
+}
+
+pub fn parse_and_map_matrix_of_nums<T>(
+    input: &[&str],
+    mapper: impl Fn(u64) -> T,
+) -> HashMap<(usize, usize), T> {
+    let num_rows = input.len();
+    let num_cols = input[0].len();
+    (0..num_rows)
+        .cartesian_product(0..num_cols)
+        .map(|pos| {
+            let num = input[pos.0]
+                .chars()
+                .nth(pos.1)
+                .unwrap()
+                .to_digit(10)
+                .unwrap() as u64;
+            (pos, mapper(num))
+        })
+        .collect()
+}
+
+#[test]
+fn test_parse_map_nums() {
+    let input = ["12345", "74195", "44668"];
+    let actual = parse_matrix_of_nums(&input);
+    let expected: HashMap<_, _> = [
+        ((0, 0), 1),
+        ((0, 1), 2),
+        ((0, 2), 3),
+        ((0, 3), 4),
+        ((0, 4), 5),
+        ((1, 0), 7),
+        ((1, 1), 4),
+        ((1, 2), 1),
+        ((1, 3), 9),
+        ((1, 4), 5),
+        ((2, 0), 4),
+        ((2, 1), 4),
+        ((2, 2), 6),
+        ((2, 3), 6),
+        ((2, 4), 8),
+    ]
+    .into();
+    assert_eq!(expected, actual)
+}
+
+pub fn manhattan_distance(pos1: &(usize, usize), pos2: (usize, usize)) -> usize {
+    pos1.0.abs_diff(pos2.0) + pos1.1.abs_diff(pos2.1)
+}
+
+#[test]
+fn test_cartesian_distance() {
+    let pos1 = (0, 0);
+    let pos2 = (1, 1);
+
+    assert_eq!(2, manhattan_distance(&pos1, &pos2));
+
+    let pos1 = (4, 3);
+    let pos2 = (10, 1);
+
+    assert_eq!(8, manhattan_distance(&pos1, &pos2));
 }
