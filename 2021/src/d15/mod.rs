@@ -51,7 +51,7 @@ struct Pos((usize, usize));
 
 impl Pos {
     fn manhattan_distance(&self, other: &Pos) -> u64 {
-        manhattan_distance(&self.0, other.0) as u64
+        manhattan_distance(&self.0, &other.0) as u64
     }
 
     fn successors(

@@ -304,7 +304,7 @@ fn test_parse_map_nums() {
     assert_eq!(expected, actual)
 }
 
-pub fn manhattan_distance(pos1: &(usize, usize), pos2: (usize, usize)) -> usize {
+pub fn manhattan_distance(pos1: &(usize, usize), pos2: &(usize, usize)) -> usize {
     pos1.0.abs_diff(pos2.0) + pos1.1.abs_diff(pos2.1)
 }
 
