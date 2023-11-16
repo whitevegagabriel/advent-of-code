@@ -21,6 +21,15 @@ mod d13;
 mod d14;
 mod d15;
 mod d16;
+mod d17;
+mod d18;
+mod d19;
+mod d20;
+mod d21;
+mod d22;
+mod d23;
+mod d24;
+mod d25;
 mod utils;
 
 fn main() {
@@ -81,6 +90,15 @@ fn get_solver(day: u8) -> SolverFn {
         14 => d14::solve,
         15 => d15::solve,
         16 => d16::solve,
+        17 => d17::solve,
+        18 => d18::solve,
+        19 => d19::solve,
+        20 => d20::solve,
+        21 => d21::solve,
+        22 => d22::solve,
+        23 => d23::solve,
+        24 => d24::solve,
+        25 => d25::solve,
         _ => {
             panic!("pick another day");
         }
@@ -168,6 +186,51 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
             problem: problem.lines().collect_vec(),
             answer1: 889,
             answer2: 739303923668,
+        }],
+        17 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 10585,
+            answer2: 5247,
+        }],
+        18 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 0,
+            answer2: 0,
+        }],
+        19 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 0,
+            answer2: 0,
+        }],
+        20 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 0,
+            answer2: 0,
+        }],
+        21 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 0,
+            answer2: 0,
+        }],
+        22 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 0,
+            answer2: 0,
+        }],
+        23 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 0,
+            answer2: 0,
+        }],
+        24 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 0,
+            answer2: 0,
+        }],
+        25 => vec![TestCase {
+            problem: problem.lines().collect_vec(),
+            answer1: 0,
+            answer2: 0,
         }],
         _ => {
             panic!("pick another day");

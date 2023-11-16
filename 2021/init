@@ -30,6 +30,3 @@ fn test() {
 }'
 
 echo "$template" > "$new_folder/mod.rs"
-aocd $day 2021 > "$new_folder/input.txt"
-aocd $day 2021 --example > "$new_folder/example.txt"
-touch "$new_folder/description.txt"

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]] ; then
+    echo "Usage: download <day>"
+    exit 0
+fi
+
+day=$(printf "%02d" $1)
+
+new_folder="src/d$day"
+
+aocd $day 2021 > "$new_folder/input.txt"
+aocd $day 2021 --example > "$new_folder/example.txt"
+touch "$new_folder/description.txt"
