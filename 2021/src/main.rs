@@ -23,12 +23,19 @@ mod d15;
 mod d16;
 mod d17;
 mod d18;
+#[allow(dead_code)]
 mod d19;
+#[allow(dead_code)]
 mod d20;
+#[allow(dead_code)]
 mod d21;
+#[allow(dead_code)]
 mod d22;
+#[allow(dead_code)]
 mod d23;
+#[allow(dead_code)]
 mod d24;
+#[allow(dead_code)]
 mod d25;
 mod utils;
 
@@ -194,8 +201,8 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
         }],
         18 => vec![TestCase {
             problem: problem.lines().collect_vec(),
-            answer1: 0,
-            answer2: 0,
+            answer1: 3699,
+            answer2: 4735,
         }],
         19 => vec![TestCase {
             problem: problem.lines().collect_vec(),
