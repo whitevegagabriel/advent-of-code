@@ -15,7 +15,8 @@ use nom::{
     IResult,
 };
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let bytes = hex::decode(problem[0]).unwrap();
     let bits = bytes.view_bits::<Msb0>();
     let top_level_packet = Packet::parse(BSlice(bits)).unwrap();

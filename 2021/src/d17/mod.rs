@@ -3,7 +3,8 @@ use regex::Regex;
 use roots::{find_roots_quadratic, Roots};
 use std::{cmp::Ordering, ops::RangeInclusive};
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let re = Regex::new(r"target area: x=([0-9]+)\.\.([0-9]+), y=(-[0-9]+)\.\.(-[0-9]+)").unwrap();
     let captures = re.captures(problem[0]).unwrap();
 

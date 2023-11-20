@@ -1,6 +1,8 @@
 use crate::utils::parse_numbers;
+use itertools::Itertools;
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let nums = parse_numbers(problem[0]);
     (solve1(&mut nums.clone()), solve2(&mut nums.clone()))
 }

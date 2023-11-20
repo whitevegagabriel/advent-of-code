@@ -10,7 +10,10 @@ day=$(printf "%02d" $1)
 new_folder="src/d$day"
 mkdir $new_folder
 
-template='pub fn solve(_problem: &[&str]) -> (u64, u64) {
+template='use itertools::Itertools;
+
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     (solve1(), solve2())
 }
 

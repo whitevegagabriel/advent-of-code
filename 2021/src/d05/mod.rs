@@ -1,6 +1,7 @@
 use itertools::Itertools;
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let lines = problem.iter().map(|s| Line::parse(s)).collect_vec();
     (solve1(&lines), solve2(&lines))
 }

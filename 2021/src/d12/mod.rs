@@ -1,7 +1,8 @@
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet, LinkedList};
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let mut cave_map = HashMap::<&str, Vec<&str>>::new();
     for line in problem {
         // assume every pairing is only listed once

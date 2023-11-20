@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use std::collections::HashMap;
 
-pub type SolverFn = fn(&[&str]) -> (u64, u64);
+pub type SolverFn = fn(&str) -> (u64, u64);
 
 #[allow(dead_code)]
 pub fn basic_test(input: &str, test: SolverFn) {
@@ -60,24 +60,24 @@ pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
         .map(|indices| {
             let (start, middle) = (indices[0], indices[1]);
             let problem = input
-                .lines()
+                .split('\n')
                 .skip(start + 1)
                 .take(middle - start - 1)
                 .collect_vec();
 
             let answer1: u64 = input
-                .lines()
+                .split('\n')
                 .nth(middle + 1)
                 .map(parse_u64_from_string)
                 .unwrap();
             let answer2: u64 = input
-                .lines()
+                .split('\n')
                 .nth(middle + 2)
                 .map(parse_u64_from_string)
                 .unwrap();
 
             TestCase {
-                problem,
+                problem: problem.join("\n"),
                 answer1,
                 answer2,
             }
@@ -95,8 +95,8 @@ pub fn transposed<T: Clone>(matrix: &Vec<Vec<T>>) -> Vec<Vec<T>> {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct TestCase<'a> {
-    pub problem: Vec<&'a str>,
+pub struct TestCase {
+    pub problem: String,
     pub answer1: u64,
     pub answer2: u64,
 }
@@ -114,11 +114,11 @@ hello: 1
 world: 2
 -------------------------------
 "#;
-    let test_cases = parse_example_testcases(&input);
+    let test_cases = parse_example_testcases(input);
 
     assert_eq!(
         vec![TestCase {
-            problem: vec!["1".into(), "2".into(), "3".into()],
+            problem: "1\n2\n3".into(),
             answer1: 1,
             answer2: 2,
         }],
@@ -144,22 +144,23 @@ more text
 greetings...
 yo
 sup
+
 -------------------------------
 hello: -
 world: 100
 -------------------------------
 "#;
-    let test_cases = parse_example_testcases(&input);
+    let test_cases = parse_example_testcases(input);
 
     assert_eq!(
         vec![
             TestCase {
-                problem: vec!["1".into(), "2".into(), "3".into()],
+                problem: "1\n2\n3".into(),
                 answer1: 1,
                 answer2: 2,
             },
             TestCase {
-                problem: vec!["greetings...".into(), "yo".into(), "sup".into()],
+                problem: "greetings...\nyo\nsup\n".into(),
                 answer1: 0,
                 answer2: 100,
             }

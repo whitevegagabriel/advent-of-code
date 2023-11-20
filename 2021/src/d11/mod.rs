@@ -5,7 +5,8 @@ use crate::{
 use itertools::Itertools;
 use std::collections::HashMap;
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let dumbos = parse_and_map_matrix_of_nums(problem, Charging);
     (solve1(dumbos.clone()), solve2(dumbos))
 }

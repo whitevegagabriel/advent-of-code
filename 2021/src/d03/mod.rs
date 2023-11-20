@@ -1,7 +1,8 @@
 use crate::utils::transposed;
 use itertools::Itertools;
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     (solve1(problem), solve2(problem))
 }
 

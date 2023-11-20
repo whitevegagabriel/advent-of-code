@@ -1,7 +1,8 @@
 use itertools::Itertools;
 use std::{collections::LinkedList, rc::Rc};
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     // The addition section is a bit easier to solve in a flat structure because travelling up and
     // down trees arbitrarily is hard
     // I originally solved this using Vec, then switched to LinkedList to see what happened with

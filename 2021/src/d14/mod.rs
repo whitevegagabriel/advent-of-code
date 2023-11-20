@@ -5,7 +5,8 @@ use std::{
     ops::AddAssign,
 };
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let template = problem[0];
     let rules: HashMap<_, _> = problem[2..]
         .iter()

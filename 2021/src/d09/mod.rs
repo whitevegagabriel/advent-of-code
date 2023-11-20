@@ -2,7 +2,8 @@ use crate::utils::get_cross_neighbors;
 use itertools::Itertools;
 use std::collections::{HashMap, LinkedList};
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let num_rows = problem.len();
     let num_cols = problem[0].len();
     let heights: HashMap<_, _> = (0..num_rows)

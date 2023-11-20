@@ -3,7 +3,8 @@ use itertools::Itertools;
 use pathfinding::prelude::astar;
 use std::{cmp::Ordering, collections::HashMap, hash::Hash};
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let risk_levels = parse_matrix_of_nums(problem)
         .iter()
         .map(|(key, value)| (*key, *value))

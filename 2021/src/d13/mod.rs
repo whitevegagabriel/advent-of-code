@@ -6,7 +6,8 @@ use std::{
     hash::{Hash, Hasher},
 };
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let split_point = problem.iter().position(|l| l == &"").unwrap();
     let points: BTreeSet<_> = parse_all_numbers(&problem[..split_point])
         .iter()

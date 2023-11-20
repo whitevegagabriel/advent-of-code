@@ -43,6 +43,7 @@ fn main() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
 
     let cli = Cli::parse();
+    // let cli = Cli::parse_from(["", "19", "--example"]);
 
     let file = match cli.example {
         true => "example.txt",
@@ -113,129 +114,130 @@ fn get_solver(day: u8) -> SolverFn {
 }
 
 fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
+    let problem = problem.to_string();
     match day {
         1 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 1665,
             answer2: 1702,
         }],
         2 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 1524750,
             answer2: 1592426537,
         }],
         3 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 738234,
             answer2: 3969126,
         }],
         4 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 71708,
             answer2: 34726,
         }],
         5 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 7269,
             answer2: 21140,
         }],
         6 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 388739,
             answer2: 1741362314973,
         }],
         7 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 354129,
             answer2: 98905973,
         }],
         8 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 532,
             answer2: 1011284,
         }],
         9 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 528,
             answer2: 920448,
         }],
         10 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 462693,
             answer2: 3094671161,
         }],
         11 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 1739,
             answer2: 324,
         }],
         12 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 4749,
             answer2: 123054,
         }],
         13 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 693,
             answer2: 5989000983004226491,
         }],
         14 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 3342,
             answer2: 3776553567525,
         }],
         15 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 745,
             answer2: 3002,
         }],
         16 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 889,
             answer2: 739303923668,
         }],
         17 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 10585,
             answer2: 5247,
         }],
         18 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 3699,
             answer2: 4735,
         }],
         19 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
-            answer1: 0,
-            answer2: 0,
+            problem,
+            answer1: 323,
+            answer2: 10685,
         }],
         20 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 0,
             answer2: 0,
         }],
         21 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 0,
             answer2: 0,
         }],
         22 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 0,
             answer2: 0,
         }],
         23 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 0,
             answer2: 0,
         }],
         24 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 0,
             answer2: 0,
         }],
         25 => vec![TestCase {
-            problem: problem.lines().collect_vec(),
+            problem,
             answer1: 0,
             answer2: 0,
         }],

@@ -1,6 +1,7 @@
 use itertools::Itertools;
 
-pub fn solve(problem: &[&str]) -> (u64, u64) {
+pub fn solve(problem: &str) -> (u64, u64) {
+    let problem = &problem.lines().collect_vec();
     let bingo_numbers = problem[0]
         .split(',')
         .map(|c| c.parse::<u64>().unwrap())
