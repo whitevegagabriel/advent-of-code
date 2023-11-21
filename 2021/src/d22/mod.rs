@@ -1,7 +1,4 @@
-use itertools::Itertools;
-
-pub fn solve(problem: &str) -> (u64, u64) {
-    let _problem = &problem.lines().collect_vec();
+pub fn solve(_problem: &str) -> (u64, u64) {
     (solve1(), solve2())
 }
 
