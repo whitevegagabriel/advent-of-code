@@ -64,13 +64,15 @@ fn main() {
         let res = solver(&test_case.problem);
         let elapsed = start.elapsed();
 
+        let (answer1, res0) = format_to_longest(test_case.answer1, res.0);
+        let (answer2, res1) = format_to_longest(test_case.answer2, res.1);
         format!(
-            "Elapsed: {} millis\nExpected: |{:^15}|{:^15}|\nActual:   |{:^15}|{:^15}|",
+            "Elapsed: {} millis\nExpected: | {} | {} |\nActual:   | {} | {} |",
             elapsed.as_millis(),
-            test_case.answer1,
-            test_case.answer2,
-            res.0,
-            res.1
+            answer1,
+            answer2,
+            res0,
+            res1
         )
     });
 
@@ -78,6 +80,21 @@ fn main() {
         "{}",
         printable_results.join("\n---------------------------------------\n")
     )
+}
+
+fn format_to_longest(a1: u64, a2: u64) -> (String, String) {
+    let mut a1 = a1.to_string();
+    let mut a2 = a2.to_string();
+    let a1_len = a1.len();
+    let a2_len = a2.len();
+
+    let shorter = if a1_len < a2_len { &mut a1 } else { &mut a2 };
+
+    for _ in 0..a1_len.abs_diff(a2_len) {
+        shorter.insert(0, ' ');
+    }
+
+    (a1, a2)
 }
 
 fn get_solver(day: u8) -> SolverFn {
@@ -218,8 +235,8 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
         }],
         21 => vec![TestCase {
             problem,
-            answer1: 0,
-            answer2: 0,
+            answer1: 576600,
+            answer2: 131888061854776,
         }],
         22 => vec![TestCase {
             problem,
