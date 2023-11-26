@@ -391,7 +391,7 @@ fn test_successors_burrow_to_corridor() {
     let game_state = GameState {
         corridor: [None; 7],
         burrows: [
-            [None, Some(Amphipod::Amber)],
+            [None, Some(Amphipod::Bronze)],
             [None; 2],
             [None; 2],
             [None; 2],
@@ -404,52 +404,52 @@ fn test_successors_burrow_to_corridor() {
         HashSet::from([
             (
                 GameState {
-                    corridor: [Some(Amphipod::Amber), None, None, None, None, None, None],
+                    corridor: [Some(Amphipod::Bronze), None, None, None, None, None, None],
                     burrows: [[None; 2]; 4],
                 },
-                4
+                40
             ),
             (
                 GameState {
-                    corridor: [None, Some(Amphipod::Amber), None, None, None, None, None],
+                    corridor: [None, Some(Amphipod::Bronze), None, None, None, None, None],
                     burrows: [[None; 2]; 4],
                 },
-                3
+                30
             ),
             (
                 GameState {
-                    corridor: [None, None, Some(Amphipod::Amber), None, None, None, None],
+                    corridor: [None, None, Some(Amphipod::Bronze), None, None, None, None],
                     burrows: [[None; 2]; 4],
                 },
-                3
+                30
             ),
             (
                 GameState {
-                    corridor: [None, None, None, Some(Amphipod::Amber), None, None, None],
+                    corridor: [None, None, None, Some(Amphipod::Bronze), None, None, None],
                     burrows: [[None; 2]; 4],
                 },
-                5
+                50
             ),
             (
                 GameState {
-                    corridor: [None, None, None, None, Some(Amphipod::Amber), None, None],
+                    corridor: [None, None, None, None, Some(Amphipod::Bronze), None, None],
                     burrows: [[None; 2]; 4],
                 },
-                7
+                70
             ),
             (
                 GameState {
-                    corridor: [None, None, None, None, None, Some(Amphipod::Amber), None],
+                    corridor: [None, None, None, None, None, Some(Amphipod::Bronze), None],
                     burrows: [[None; 2]; 4],
                 },
-                9
+                90
             ),
             (
                 GameState {
-                    corridor: [None, None, None, None, None, None, Some(Amphipod::Amber)],
+                    corridor: [None, None, None, None, None, None, Some(Amphipod::Bronze)],
                     burrows: [[None; 2]; 4],
                 },
-                10
+                100
             ),
         ]),
         actual
