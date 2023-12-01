@@ -245,21 +245,6 @@ enum Register {
     Z,
 }
 
-impl Register {
-    fn parse(input: &str) -> IResult<&str, Self> {
-        map(take(1_usize), |reg| {
-            println!("reg: {reg}");
-            match reg {
-                "w" => W,
-                "x" => X,
-                "y" => Y,
-                "z" => Z,
-                _ => panic!("not valid"),
-            }
-        })(input)
-    }
-}
-
 #[test]
 fn test() {
     use crate::utils::basic_test;

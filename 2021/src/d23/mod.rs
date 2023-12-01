@@ -231,23 +231,9 @@ impl<const N: usize> GameState<N> {
          - minimum cost to put all amphipods in their correct room
          - number of amphipods out of place
 
-        But both resulted in slower execution times for me
+        But both resulted in slower execution times
         */
         0
-    }
-
-    fn absolute_corridor_horz_pos(relative_pos: &usize) -> usize {
-        if (0..=1).contains(relative_pos) {
-            *relative_pos
-        } else if (2..=5).contains(relative_pos) {
-            2 * relative_pos - 1
-        } else {
-            10
-        }
-    }
-
-    fn absolute_burrow_horz_pos(relative_pos: &usize) -> usize {
-        2 * relative_pos + 2
     }
 }
 

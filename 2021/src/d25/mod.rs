@@ -121,6 +121,7 @@ impl CucumberState {
         self.cucumbers_moved_last_iteration = updated;
     }
 
+    #[allow(dead_code)]
     fn print_state(&self) {
         let printable_state = self
             .state

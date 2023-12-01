@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]] ; then
+    echo "Usage: init <day>"
+    exit 0
+fi
+
+day=$(printf "%02d" $1)
+
+new_folder="src/d$day"
+mkdir -p $new_folder
+
+template='pub fn solve(_problem: &str) -> (u64, u64) {
+    (solve1(), solve2())
+}
+
+fn solve1() -> u64 {
+    0
+}
+
+fn solve2() -> u64 {
+    0
+}
+
+#[test]
+fn test() {
+    use crate::utils::basic_test;
+    let input = include_str!("example.txt");
+    basic_test(input, solve);
+}'
+
+echo "$template" > "$new_folder/mod.rs"
+touch "$new_folder/example.txt"

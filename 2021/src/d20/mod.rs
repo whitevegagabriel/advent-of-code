@@ -176,15 +176,6 @@ impl Image {
     }
 }
 
-fn grow_canvas(canvas: &mut Vec<Vec<u8>>) {
-    for line in canvas.iter_mut() {
-        line.insert(0, 0);
-        line.push(0);
-    }
-    canvas.insert(0, vec![0; canvas[0].len()]);
-    canvas.push(vec![0; canvas[0].len()]);
-}
-
 #[test]
 fn test() {
     use crate::utils::basic_test;

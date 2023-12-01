@@ -157,25 +157,6 @@ impl Scanner {
     }
 }
 
-fn has_volumetric_intersection(inner: &[&Point], outer: &[&Point]) -> bool {
-    let (min_x, max_x, min_y, max_y, min_z, max_z) = inner.iter().fold(
-        (i32::MAX, i32::MIN, i32::MAX, i32::MIN, i32::MAX, i32::MIN),
-        |(min_x, max_x, min_y, max_y, min_z, max_z), p| {
-            (
-                min_x.min(p.x),
-                max_x.max(p.x),
-                min_y.min(p.y),
-                max_y.max(p.y),
-                min_z.min(p.z),
-                max_z.max(p.z),
-            )
-        },
-    );
-    outer.iter().all(|p| {
-        p.x < min_x && p.x > max_x && p.y < min_y && p.y > max_y && p.z < min_z && p.z > max_z
-    })
-}
-
 enum Axis {
     X,
     Y,
