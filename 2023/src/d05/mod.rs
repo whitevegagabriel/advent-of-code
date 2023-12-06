@@ -162,7 +162,6 @@ impl NumberMap {
             }
         };
 
-
         let new_source_start = self.reverse_map(start_inclusive);
         let new_dest_start = new_mapping.map(start_inclusive);
 
