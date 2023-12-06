@@ -1,4 +1,3 @@
-use std::cmp::min;
 use itertools::Itertools;
 use nom::{
     bytes::complete::{tag, take_until, take_while1},
@@ -7,7 +6,7 @@ use nom::{
     sequence::{preceded, tuple},
     IResult,
 };
-use std::collections::HashSet;
+use std::{cmp::min, collections::HashSet};
 
 pub fn solve(problem: &str) -> (u64, u64) {
     let (_, scratch_cards) = separated_list1(tag("\n"), ScratchCard::parse)(problem).unwrap();
@@ -29,7 +28,7 @@ fn solve1(scratch_cards: &[ScratchCard]) -> u64 {
 }
 
 fn solve2(scratch_cards: &[ScratchCard]) -> u64 {
-    let mut card_qtys =  vec![1; scratch_cards.len()];
+    let mut card_qtys = vec![1; scratch_cards.len()];
     for (idx, card) in scratch_cards.iter().enumerate() {
         let num_winners = card.num_winners();
         for jdx in idx + 1..=min(idx + num_winners, scratch_cards.len()) {

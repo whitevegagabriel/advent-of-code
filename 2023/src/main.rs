@@ -1,3 +1,7 @@
+#![feature(iter_array_chunks)]
+
+extern crate core;
+
 use crate::utils::SolverFn;
 use clap::Parser;
 use core::panic;
@@ -148,8 +152,8 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
         }],
         5 => vec![TestCase {
             problem,
-            answer1: 0,
-            answer2: 0,
+            answer1: 993500720,
+            answer2: 4917124,
         }],
         6 => vec![TestCase {
             problem,
