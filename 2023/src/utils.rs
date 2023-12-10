@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use num::cast::AsPrimitive;
 use std::collections::HashMap;
 
 pub type SolverFn = fn(&str) -> (u64, u64);
@@ -85,7 +86,7 @@ pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
         .collect_vec()
 }
 
-pub fn transposed<T: Clone>(matrix: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+pub fn transposed<T: Clone>(matrix: &[Vec<T>]) -> Vec<Vec<T>> {
     let rows = matrix.len();
     let cols = matrix[0].len();
 
@@ -190,27 +191,30 @@ fn odd_median() {
     assert_eq!(2, median);
 }
 
-pub fn get_cross_neighbors(point: &(usize, usize)) -> Vec<(usize, usize)> {
-    let point = (point.0 as i64, point.1 as i64);
+pub fn get_cross_neighbors<T: AsPrimitive<i64> + TryFrom<i64>>(point: &(T, T)) -> Vec<(T, T)> {
+    let point = (point.0.as_(), point.1.as_());
     [-1, 0, 1, 0]
         .into_iter()
         .zip([0, -1, 0, 1])
-        .filter_map(|diff| try_add_into_usize(&point, &diff))
+        .filter_map(|diff| maybe_add(&point, &diff))
         .collect_vec()
 }
 
-pub fn get_square_neighbors(point: &(usize, usize)) -> Vec<(usize, usize)> {
-    let point = (point.0 as i64, point.1 as i64);
+pub fn get_square_neighbors<T: AsPrimitive<i64> + TryFrom<i64>>(point: &(T, T)) -> Vec<(T, T)> {
+    let point: (i64, i64) = (point.0.as_(), point.1.as_());
     [-1, 0, 1, -1, 1, -1, 0, 1]
         .into_iter()
         .zip([-1, -1, -1, 0, 0, 1, 1, 1])
-        .filter_map(|diff| try_add_into_usize(&point, &diff))
+        .filter_map(|diff| maybe_add(&point, &diff))
         .collect_vec()
 }
 
-fn try_add_into_usize(p1: &(i64, i64), p2: &(i64, i64)) -> Option<(usize, usize)> {
-    let row_new = usize::try_from(p1.0 + p2.0);
-    let col_new = usize::try_from(p1.1 + p2.1);
+fn maybe_add<T: AsPrimitive<i64> + TryFrom<i64>>(
+    p1: &(i64, i64),
+    p2: &(i64, i64),
+) -> Option<(T, T)> {
+    let row_new = T::try_from(p1.0 + p2.0);
+    let col_new = T::try_from(p1.1 + p2.1);
     if let (Ok(row_new), Ok(col_new)) = (row_new, col_new) {
         Some((row_new, col_new))
     } else {
@@ -220,7 +224,7 @@ fn try_add_into_usize(p1: &(i64, i64), p2: &(i64, i64)) -> Option<(usize, usize)
 
 #[test]
 fn test_cross_neighbors() {
-    let point = (0, 0);
+    let point = (0_usize, 0);
     let mut neighbors = get_cross_neighbors(&point);
     neighbors.sort();
     assert_eq!(vec![(0, 1), (1, 0)], neighbors);
@@ -233,7 +237,7 @@ fn test_cross_neighbors() {
 
 #[test]
 fn test_square_neighbors() {
-    let point = (0, 0);
+    let point = (0_usize, 0);
     let mut neighbors = get_square_neighbors(&point);
     neighbors.sort();
     assert_eq!(vec![(0, 1), (1, 0), (1, 1)], neighbors);
