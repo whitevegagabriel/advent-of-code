@@ -106,7 +106,14 @@ fn num_configs(
         if num_broken_springs == 0 {
             configs += num_configs(springs, runs_of_broken_springs, 0, s_idx + 1, r_idx, memory);
         } else if num_broken_springs == num_required_broken_springs {
-            configs += num_configs(springs, runs_of_broken_springs, 0, s_idx + 1, r_idx + 1, memory);
+            configs += num_configs(
+                springs,
+                runs_of_broken_springs,
+                0,
+                s_idx + 1,
+                r_idx + 1,
+                memory,
+            );
         }
     }
 
