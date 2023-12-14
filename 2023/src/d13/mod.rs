@@ -10,31 +10,37 @@ pub fn solve(problem: &str) -> (u64, u64) {
 }
 
 fn solve1(patterns: &[Vec<Vec<char>>]) -> u64 {
-    patterns.iter().map(|pattern| {
-        if let Some(row_pos) = get_reflection_pos(pattern) {
-            return row_pos * 100;
-        }
+    patterns
+        .iter()
+        .map(|pattern| {
+            if let Some(row_pos) = get_reflection_pos(pattern) {
+                return row_pos * 100;
+            }
 
-        if let Some(col_pos) = get_reflection_pos(&transposed(pattern)) {
-            return col_pos;
-        }
+            if let Some(col_pos) = get_reflection_pos(&transposed(pattern)) {
+                return col_pos;
+            }
 
-        unreachable!()
-    }).sum()
+            unreachable!()
+        })
+        .sum()
 }
 
 fn solve2(patterns: &[Vec<Vec<char>>]) -> u64 {
-    patterns.iter().map(|pattern| {
-        if let Some(row_pos) = get_secondary_reflection_pos(pattern) {
-            return row_pos * 100;
-        }
+    patterns
+        .iter()
+        .map(|pattern| {
+            if let Some(row_pos) = get_secondary_reflection_pos(pattern) {
+                return row_pos * 100;
+            }
 
-        if let Some(col_pos) = get_secondary_reflection_pos(&transposed(pattern)) {
-            return col_pos;
-        }
+            if let Some(col_pos) = get_secondary_reflection_pos(&transposed(pattern)) {
+                return col_pos;
+            }
 
-        unreachable!()
-    }).sum()
+            unreachable!()
+        })
+        .sum()
 }
 
 fn get_reflection_pos(pattern: &[Vec<char>]) -> Option<u64> {
@@ -54,9 +60,7 @@ fn get_secondary_reflection_pos(pattern: &[Vec<char>]) -> Option<u64> {
     for lo_start in 0..=pattern.len() - 2 {
         let mut cleaned_smudge = false;
         let mut all_match = true;
-        for (lo, hi) in (0..=lo_start)
-            .rev()
-            .zip(lo_start + 1..pattern.len()) {
+        for (lo, hi) in (0..=lo_start).rev().zip(lo_start + 1..pattern.len()) {
             if pattern[lo] == pattern[hi] {
                 continue;
             } else if !cleaned_smudge && diff(&pattern[lo], &pattern[hi]) == 1 {
