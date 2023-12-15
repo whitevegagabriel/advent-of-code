@@ -51,11 +51,14 @@ fn solve2(mut problem: Vec<Vec<char>>) -> u64 {
 
     let meta_cycle_repeat_start = memory[&problem];
     let meta_cycle_len = cycles_taken - meta_cycle_repeat_start;
-    let required_cycle_pos_within_meta_cycle = (cycles_req - meta_cycle_repeat_start) % meta_cycle_len;
+    let required_cycle_pos_within_meta_cycle =
+        (cycles_req - meta_cycle_repeat_start) % meta_cycle_len;
 
     let problem_at_req_cycle = memory
         .iter()
-        .find(|(_, cycle)| **cycle == required_cycle_pos_within_meta_cycle + meta_cycle_repeat_start)
+        .find(|(_, cycle)| {
+            **cycle == required_cycle_pos_within_meta_cycle + meta_cycle_repeat_start
+        })
         .map(|(problem, _)| problem.clone())
         .unwrap();
 
