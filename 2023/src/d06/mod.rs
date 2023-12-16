@@ -1,17 +1,17 @@
 use itertools::Itertools;
 use roots::find_roots_quadratic;
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     (solve1(problem), solve2(problem))
 }
 
-fn solve1(problem: &str) -> u64 {
+fn solve1(problem: &str) -> usize {
     let (times, distances) = problem
         .lines()
         .map(|line| {
             line.split_whitespace()
                 .skip(1)
-                .map(|s| s.parse::<u64>().unwrap())
+                .map(|s| s.parse::<usize>().unwrap())
                 .collect_vec()
         })
         .collect_tuple()
@@ -22,30 +22,29 @@ fn solve1(problem: &str) -> u64 {
         .zip(distances)
         .map(|(time, distance)| {
             match find_roots_quadratic(1f32, -(time as f32), distance as f32 + 0.01f32) {
-                roots::Roots::Two([small, big]) => big as u64 - small as u64,
+                roots::Roots::Two([small, big]) => big as usize - small as usize,
                 _ => panic!("should only have two roots"),
             }
         })
         .product()
 }
 
-fn solve2(problem: &str) -> u64 {
+fn solve2(problem: &str) -> usize {
     let (time, distance) = problem
         .lines()
         .map(|line| {
-            line.split(":")
-                .skip(1)
-                .next()
+            line.split(':')
+                .nth(1)
                 .unwrap()
-                .replace(" ", "")
-                .parse::<u64>()
+                .replace(' ', "")
+                .parse::<usize>()
                 .unwrap()
         })
         .collect_tuple()
         .unwrap();
 
     match find_roots_quadratic(1f64, -(time as f64), distance as f64 + 0.01f64) {
-        roots::Roots::Two([small, big]) => big as u64 - small as u64,
+        roots::Roots::Two([small, big]) => big as usize - small as usize,
         _ => panic!("should only have two roots"),
     }
 }

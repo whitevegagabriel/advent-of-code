@@ -7,12 +7,12 @@ use nom::{
     IResult,
 };
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let (_, games) = separated_list1(tag("\n"), Game::parse)(problem).unwrap();
     (solve1(&games), solve2(games))
 }
 
-fn solve1(games: &[Game]) -> u64 {
+fn solve1(games: &[Game]) -> usize {
     games
         .iter()
         .filter_map(|game| {
@@ -26,7 +26,7 @@ fn solve1(games: &[Game]) -> u64 {
         .sum()
 }
 
-fn solve2(games: Vec<Game>) -> u64 {
+fn solve2(games: Vec<Game>) -> usize {
     games
         .into_iter()
         .map(|game| {
@@ -46,7 +46,7 @@ fn solve2(games: Vec<Game>) -> u64 {
 
 #[derive(PartialEq, Debug)]
 struct Game {
-    id: u64,
+    id: usize,
     cube_collections: Vec<CubeCollection>,
 }
 
@@ -56,7 +56,7 @@ impl Game {
             tag("Game "),
             map(
                 separated_pair(
-                    map(digit1, |id: &str| id.parse::<u64>().unwrap()),
+                    map(digit1, |id: &str| id.parse::<usize>().unwrap()),
                     tag(":"),
                     separated_list1(tag(";"), CubeCollection::parse),
                 ),
@@ -71,9 +71,9 @@ impl Game {
 
 #[derive(PartialOrd, PartialEq, Debug)]
 struct CubeCollection {
-    red: u64,
-    green: u64,
-    blue: u64,
+    red: usize,
+    green: usize,
+    blue: usize,
 }
 
 impl CubeCollection {
@@ -84,7 +84,7 @@ impl CubeCollection {
                 preceded(
                     tag(" "),
                     separated_pair(
-                        map(digit1, |id: &str| id.parse::<u64>().unwrap()),
+                        map(digit1, |id: &str| id.parse::<usize>().unwrap()),
                         tag(" "),
                         alpha1,
                     ),

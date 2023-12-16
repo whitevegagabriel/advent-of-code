@@ -8,18 +8,18 @@ use nom::{
 };
 use std::{cmp::min, collections::HashSet};
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let (_, scratch_cards) = separated_list1(tag("\n"), ScratchCard::parse)(problem).unwrap();
     (solve1(&scratch_cards), solve2(&scratch_cards))
 }
 
-fn solve1(scratch_cards: &[ScratchCard]) -> u64 {
+fn solve1(scratch_cards: &[ScratchCard]) -> usize {
     scratch_cards
         .iter()
         .map(|card| {
             let num_winners = card.num_winners();
             if num_winners > 0 {
-                2_u64.pow(num_winners as u32 - 1)
+                2_usize.pow(num_winners as u32 - 1)
             } else {
                 0
             }
@@ -27,7 +27,7 @@ fn solve1(scratch_cards: &[ScratchCard]) -> u64 {
         .sum()
 }
 
-fn solve2(scratch_cards: &[ScratchCard]) -> u64 {
+fn solve2(scratch_cards: &[ScratchCard]) -> usize {
     let mut card_qtys = vec![1; scratch_cards.len()];
     for (idx, card) in scratch_cards.iter().enumerate() {
         let num_winners = card.num_winners();
@@ -40,8 +40,8 @@ fn solve2(scratch_cards: &[ScratchCard]) -> u64 {
 
 #[derive(Debug, PartialEq)]
 struct ScratchCard {
-    winning_numbers: Vec<u64>,
-    my_numbers: Vec<u64>,
+    winning_numbers: Vec<usize>,
+    my_numbers: Vec<usize>,
 }
 
 impl ScratchCard {
@@ -57,7 +57,9 @@ impl ScratchCard {
                             take_while1(|c: char| c.is_ascii_digit()),
                         )),
                         |nums: Vec<&str>| {
-                            nums.iter().map(|s| s.parse::<u64>().unwrap()).collect_vec()
+                            nums.iter()
+                                .map(|s| s.parse::<usize>().unwrap())
+                                .collect_vec()
                         },
                     ),
                 ),

@@ -2,19 +2,19 @@ use crate::utils::{manhattan_distance, transposed};
 use itertools::Itertools;
 use std::cmp::{max, min};
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     (solve1(problem), solve2(problem))
 }
 
-fn solve1(problem: &str) -> u64 {
+fn solve1(problem: &str) -> usize {
     solve_with_expansion(problem, 2)
 }
 
-fn solve2(problem: &str) -> u64 {
+fn solve2(problem: &str) -> usize {
     solve_with_expansion(problem, 1_000_000)
 }
 
-fn solve_with_expansion(problem: &str, expansion_size: usize) -> u64 {
+fn solve_with_expansion(problem: &str, expansion_size: usize) -> usize {
     let image = problem
         .lines()
         .map(|line| line.chars().collect_vec())
@@ -62,7 +62,7 @@ fn solve_with_expansion(problem: &str, expansion_size: usize) -> u64 {
                 .filter(|c| c_range.contains(c))
                 .count()
                 * (expansion_size - 1);
-            dist as u64
+            dist
         })
         .sum()
 }

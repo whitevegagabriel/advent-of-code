@@ -2,7 +2,7 @@ use itertools::Itertools;
 use num::cast::AsPrimitive;
 use std::collections::HashMap;
 
-pub type SolverFn = fn(&str) -> (u64, u64);
+pub type SolverFn = fn(&str) -> (usize, usize);
 
 #[allow(dead_code)]
 pub fn basic_test(input: &str, test: SolverFn) {
@@ -15,20 +15,20 @@ pub fn basic_test(input: &str, test: SolverFn) {
     }
 }
 
-pub fn median_round_down(input: Vec<u64>) -> u64 {
+pub fn median_round_down(input: Vec<usize>) -> usize {
     let mut input = input.to_vec();
     input.sort();
     input[input.len() / 2]
 }
 
-pub fn parse_numbers(input: &str) -> Vec<u64> {
+pub fn parse_numbers(input: &str) -> Vec<usize> {
     input
         .split(',')
-        .map(|n| n.parse::<u64>().unwrap())
+        .map(|n| n.parse::<usize>().unwrap())
         .collect_vec()
 }
 
-pub fn parse_all_numbers(input: &[&str]) -> Vec<Vec<u64>> {
+pub fn parse_all_numbers(input: &[&str]) -> Vec<Vec<usize>> {
     input.iter().map(|l| parse_numbers(l)).collect()
 }
 
@@ -47,7 +47,7 @@ pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
         .collect_vec();
 
     // assumes the format "answer_x: i"
-    fn parse_u64_from_string(input: &str) -> u64 {
+    fn parse_usize_from_string(input: &str) -> usize {
         let maybe_num = input.split(':').last().unwrap().trim();
 
         if maybe_num == "-" {
@@ -66,15 +66,15 @@ pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
                 .take(middle - start - 1)
                 .collect_vec();
 
-            let answer1: u64 = input
+            let answer1: usize = input
                 .split('\n')
                 .nth(middle + 1)
-                .map(parse_u64_from_string)
+                .map(parse_usize_from_string)
                 .unwrap();
-            let answer2: u64 = input
+            let answer2: usize = input
                 .split('\n')
                 .nth(middle + 2)
-                .map(parse_u64_from_string)
+                .map(parse_usize_from_string)
                 .unwrap();
 
             TestCase {
@@ -98,8 +98,8 @@ pub fn transposed<T: Clone>(matrix: &[Vec<T>]) -> Vec<Vec<T>> {
 #[derive(Debug, PartialEq)]
 pub struct TestCase {
     pub problem: String,
-    pub answer1: u64,
-    pub answer2: u64,
+    pub answer1: usize,
+    pub answer2: usize,
 }
 
 #[test]
@@ -260,13 +260,13 @@ fn test_square_neighbors() {
     );
 }
 
-pub fn parse_matrix_of_nums(input: &[&str]) -> HashMap<(usize, usize), u64> {
+pub fn parse_matrix_of_nums(input: &[&str]) -> HashMap<(usize, usize), usize> {
     parse_and_map_matrix_of_nums(input, |n| n)
 }
 
 pub fn parse_and_map_matrix_of_nums<T>(
     input: &[&str],
-    mapper: impl Fn(u64) -> T,
+    mapper: impl Fn(usize) -> T,
 ) -> HashMap<(usize, usize), T> {
     let num_rows = input.len();
     let num_cols = input[0].len();
@@ -278,7 +278,7 @@ pub fn parse_and_map_matrix_of_nums<T>(
                 .nth(pos.1)
                 .unwrap()
                 .to_digit(10)
-                .unwrap() as u64;
+                .unwrap() as usize;
             (pos, mapper(num))
         })
         .collect()

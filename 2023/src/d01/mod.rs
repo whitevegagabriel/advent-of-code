@@ -1,12 +1,12 @@
 use itertools::Itertools;
 use std::collections::HashMap;
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let problem = problem.lines().collect_vec();
     (solve1(&problem), solve2(&problem))
 }
 
-fn solve1(lines: &[&str]) -> u64 {
+fn solve1(lines: &[&str]) -> usize {
     lines
         .iter()
         .map(|line| {
@@ -16,12 +16,12 @@ fn solve1(lines: &[&str]) -> u64 {
                 .rev()
                 .find(|c| c.is_ascii_digit())
                 .unwrap_or('0');
-            format!("{first}{last}").parse::<u64>().unwrap()
+            format!("{first}{last}").parse::<usize>().unwrap()
         })
         .sum()
 }
 
-fn solve2(lines: &[&str]) -> u64 {
+fn solve2(lines: &[&str]) -> usize {
     // problem description excludes zero
     let number_mapping = HashMap::from([
         ("one", 1),
@@ -66,7 +66,7 @@ fn solve2(lines: &[&str]) -> u64 {
             let value = nums.first().unwrap() * 10 + nums.last().unwrap();
             value
         })
-        .sum::<u32>() as u64
+        .sum::<u32>() as usize
 }
 
 #[test]

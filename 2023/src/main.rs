@@ -79,7 +79,7 @@ fn main() {
     )
 }
 
-fn format_to_longest(a1: u64, a2: u64) -> (String, String) {
+fn format_to_longest(a1: usize, a2: usize) -> (String, String) {
     let mut a1 = a1.to_string();
     let mut a2 = a2.to_string();
     let a1_len = a1.len();
@@ -207,8 +207,8 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
         }],
         16 => vec![TestCase {
             problem,
-            answer1: 0,
-            answer2: 0,
+            answer1: 8021,
+            answer2: 8216,
         }],
         17 => vec![TestCase {
             problem,

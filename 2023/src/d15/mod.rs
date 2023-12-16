@@ -10,7 +10,7 @@ use nom::{
     IResult,
 };
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let problem = problem.lines().next().unwrap().split(',').collect_vec();
 
     let s1 = solve1(&problem);
@@ -20,11 +20,11 @@ pub fn solve(problem: &str) -> (u64, u64) {
     (s1, s2)
 }
 
-fn solve1(init_sequence: &[&str]) -> u64 {
-    init_sequence.iter().map(|s| hash(s)).sum::<usize>() as u64
+fn solve1(init_sequence: &[&str]) -> usize {
+    init_sequence.iter().map(|s| hash(s)).sum()
 }
 
-fn solve2(operation_sequence: &[&str]) -> u64 {
+fn solve2(operation_sequence: &[&str]) -> usize {
     let mut box_hash_map = vec![vec![]; 256];
     for label_operation in operation_sequence {
         let (label, op) = parse_operation(label_operation).unwrap().1;
@@ -56,11 +56,11 @@ fn solve2(operation_sequence: &[&str]) -> u64 {
                 .sum::<usize>()
                 * (box_idx + 1)
         })
-        .sum::<usize>() as u64
+        .sum::<usize>()
 }
 
 // I saw someone use a LinkedHashMap and thought I'd try it
-fn solve2_alt(operation_sequence: &[&str]) -> u64 {
+fn solve2_alt(operation_sequence: &[&str]) -> usize {
     let mut box_hash_map = vec![LinkedHashMap::<&str, usize>::new(); 256];
     for label_operation in operation_sequence {
         let (label, op) = parse_operation(label_operation).unwrap().1;
@@ -68,7 +68,7 @@ fn solve2_alt(operation_sequence: &[&str]) -> u64 {
         match op {
             Operation::Add(focal_length) => {
                 *lens_box.entry(label).or_default() = focal_length;
-            },
+            }
             Operation::Remove => {
                 lens_box.remove(label);
             }
@@ -86,7 +86,7 @@ fn solve2_alt(operation_sequence: &[&str]) -> u64 {
                 .sum::<usize>()
                 * (box_idx + 1)
         })
-        .sum::<usize>() as u64
+        .sum()
 }
 
 fn hash(input: &str) -> usize {

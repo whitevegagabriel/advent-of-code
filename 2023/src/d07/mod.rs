@@ -4,7 +4,7 @@ use crate::d07::HandStrength::{
 use itertools::Itertools;
 use std::cmp::Ordering;
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let hand_bids = problem
         .lines()
         .map(|line| {
@@ -12,7 +12,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
             let cards = cards
                 .chars()
                 .map(|c| match c {
-                    d if d.is_ascii_digit() => c.to_digit(10).unwrap() as u64,
+                    d if d.is_ascii_digit() => c.to_digit(10).unwrap() as usize,
                     'T' => 10,
                     'J' => 11,
                     'Q' => 12,
@@ -21,7 +21,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
                     _ => panic!("unexpected card"),
                 })
                 .collect_vec();
-            let bid = bid.parse::<u64>().unwrap();
+            let bid = bid.parse::<usize>().unwrap();
             (cards, bid)
         })
         .collect_vec();
@@ -29,17 +29,17 @@ pub fn solve(problem: &str) -> (u64, u64) {
     (solve1(&hand_bids), solve2(&hand_bids))
 }
 
-fn solve1(card_bids: &[(Vec<u64>, u64)]) -> u64 {
+fn solve1(card_bids: &[(Vec<usize>, usize)]) -> usize {
     card_bids
         .iter()
         .map(|(cards, bid)| (Hand::new1(cards.clone()), bid))
         .sorted_by(|(hand1, _), (hand2, _)| hand1.cmp(hand2))
         .enumerate()
-        .map(|(rank, (_, bid))| (rank as u64 + 1) * bid)
+        .map(|(rank, (_, bid))| (rank + 1) * bid)
         .sum()
 }
 
-fn solve2(card_bids: &[(Vec<u64>, u64)]) -> u64 {
+fn solve2(card_bids: &[(Vec<usize>, usize)]) -> usize {
     card_bids
         .iter()
         .map(|(cards, bid)| {
@@ -52,17 +52,17 @@ fn solve2(card_bids: &[(Vec<u64>, u64)]) -> u64 {
         })
         .sorted_by(|(hand1, _), (hand2, _)| hand1.cmp(hand2))
         .enumerate()
-        .map(|(rank, (_, bid))| (rank as u64 + 1) * bid)
+        .map(|(rank, (_, bid))| (rank + 1) * bid)
         .sum()
 }
 
 struct Hand {
-    cards: Vec<u64>,
+    cards: Vec<usize>,
     strength: HandStrength,
 }
 
 impl Hand {
-    fn new1(cards: Vec<u64>) -> Self {
+    fn new1(cards: Vec<usize>) -> Self {
         let counts = cards.iter().counts();
         let frequencies_hi_to_lo = counts.values().sorted().rev().cloned().collect_vec();
 
@@ -79,7 +79,7 @@ impl Hand {
         Self { cards, strength }
     }
 
-    fn new2(cards: Vec<u64>) -> Self {
+    fn new2(cards: Vec<usize>) -> Self {
         let counts = cards.iter().filter(|c| c != &&1).counts();
         let jacks = cards.iter().filter(|c| c == &&1).count();
         let mut frequencies_hi_to_lo = counts.values().sorted().rev().cloned().collect_vec();

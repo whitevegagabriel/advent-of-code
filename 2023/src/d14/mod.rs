@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use std::collections::HashMap;
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let problem = problem
         .lines()
         .map(|line| line.chars().collect_vec())
@@ -9,7 +9,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
     (solve1(problem.clone()), solve2(problem))
 }
 
-fn solve1(mut problem: Vec<Vec<char>>) -> u64 {
+fn solve1(mut problem: Vec<Vec<char>>) -> usize {
     problem.insert(0, vec!['#'; problem[0].len()]);
     let width = problem[0].len();
     let height = problem.len();
@@ -29,12 +29,12 @@ fn solve1(mut problem: Vec<Vec<char>>) -> u64 {
                     _ => (),
                 }
             }
-            row_weight as u64
+            row_weight
         })
         .sum()
 }
 
-fn solve2(mut problem: Vec<Vec<char>>) -> u64 {
+fn solve2(mut problem: Vec<Vec<char>>) -> usize {
     let cycles_req = 1_000_000_000;
     let mut memory = HashMap::new();
     let mut cycles_taken = 0;
@@ -70,7 +70,7 @@ fn solve2(mut problem: Vec<Vec<char>>) -> u64 {
             'O' => height - row,
             _ => 0,
         })
-        .sum::<usize>() as u64
+        .sum()
 }
 
 fn tilt_north(problem: &mut [Vec<char>]) {

@@ -1,7 +1,7 @@
 use crate::utils::transposed;
 use itertools::Itertools;
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let problem = problem
         .split("\n\n")
         .map(|pat| pat.lines().map(|l| l.chars().collect_vec()).collect_vec())
@@ -9,7 +9,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
     (solve1(&problem), solve2(&problem))
 }
 
-fn solve1(patterns: &[Vec<Vec<char>>]) -> u64 {
+fn solve1(patterns: &[Vec<Vec<char>>]) -> usize {
     patterns
         .iter()
         .map(|pattern| {
@@ -26,7 +26,7 @@ fn solve1(patterns: &[Vec<Vec<char>>]) -> u64 {
         .sum()
 }
 
-fn solve2(patterns: &[Vec<Vec<char>>]) -> u64 {
+fn solve2(patterns: &[Vec<Vec<char>>]) -> usize {
     patterns
         .iter()
         .map(|pattern| {
@@ -43,20 +43,20 @@ fn solve2(patterns: &[Vec<Vec<char>>]) -> u64 {
         .sum()
 }
 
-fn get_reflection_pos(pattern: &[Vec<char>]) -> Option<u64> {
+fn get_reflection_pos(pattern: &[Vec<char>]) -> Option<usize> {
     for lo_start in 0..=pattern.len() - 2 {
         if (0..=lo_start)
             .rev()
             .zip(lo_start + 1..pattern.len())
             .all(|(lo, hi)| pattern[lo] == pattern[hi])
         {
-            return Some((lo_start + 1) as u64);
+            return Some(lo_start + 1);
         }
     }
     None
 }
 
-fn get_secondary_reflection_pos(pattern: &[Vec<char>]) -> Option<u64> {
+fn get_secondary_reflection_pos(pattern: &[Vec<char>]) -> Option<usize> {
     for lo_start in 0..=pattern.len() - 2 {
         let mut cleaned_smudge = false;
         let mut all_match = true;
@@ -74,7 +74,7 @@ fn get_secondary_reflection_pos(pattern: &[Vec<char>]) -> Option<u64> {
 
         // only care about matches that happened because of the cleaned smudge
         if cleaned_smudge && all_match {
-            return Some((lo_start + 1) as u64);
+            return Some(lo_start + 1);
         }
     }
     None

@@ -1,12 +1,12 @@
-pub fn solve(_problem: &str) -> (u64, u64) {
+pub fn solve(_problem: &str) -> (usize, usize) {
     (solve1(), solve2())
 }
 
-fn solve1() -> u64 {
+fn solve1() -> usize {
     0
 }
 
-fn solve2() -> u64 {
+fn solve2() -> usize {
     0
 }
 

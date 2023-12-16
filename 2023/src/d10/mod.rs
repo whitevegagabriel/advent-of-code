@@ -3,7 +3,7 @@ use itertools::Itertools;
 use pathfinding::prelude::astar;
 use std::collections::{HashMap, HashSet, VecDeque};
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let (s_coord, pipe_map) = parse_input(problem);
     (
         solve1(&s_coord, pipe_map.clone()),
@@ -11,7 +11,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
     )
 }
 
-fn solve1(start_coord: &CoordI64, mut pipe_map: HashMap<CoordI64, Vec<CoordI64>>) -> u64 {
+fn solve1(start_coord: &CoordI64, mut pipe_map: HashMap<CoordI64, Vec<CoordI64>>) -> usize {
     // break loop at start to make path / length finding easier
     let coords = pipe_map.get_mut(start_coord).unwrap();
     let end = coords.pop().unwrap();
@@ -29,10 +29,10 @@ fn solve1(start_coord: &CoordI64, mut pipe_map: HashMap<CoordI64, Vec<CoordI64>>
         |coord| coord == &end,
     )
     .expect("should find path to end of loop");
-    ((dist + 1) / 2) as u64
+    (dist + 1) / 2
 }
 
-fn solve2(start_coord: &CoordI64, pipe_map: &HashMap<CoordI64, Vec<CoordI64>>) -> u64 {
+fn solve2(start_coord: &CoordI64, pipe_map: &HashMap<CoordI64, Vec<CoordI64>>) -> usize {
     // take all the pipe locations, and double their coordinate values, also adding "intermediate"
     // pipe points to simulate a boundary for the next calculation
     let pipe_coords = doubled_state_space_keys(start_coord, pipe_map);

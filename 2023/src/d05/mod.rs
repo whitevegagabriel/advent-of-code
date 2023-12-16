@@ -10,11 +10,11 @@ use nom::{
 use ranges::{Arrangement, GenericRange, OperationResult};
 use std::{collections::Bound, ops::RangeBounds};
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let (_, (nums, number_mappers)) = tuple((
         preceded(
             tag("seeds: "),
-            separated_list1(tag(" "), map(digit1, |s: &str| s.parse::<u64>().unwrap())),
+            separated_list1(tag(" "), map(digit1, |s: &str| s.parse::<usize>().unwrap())),
         ),
         separated_list1(tag("\n\n"), NumberMapper::parse),
     ))(problem)
@@ -25,7 +25,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
     )
 }
 
-fn solve1(nums: &[u64], mappers: &[NumberMapper]) -> u64 {
+fn solve1(nums: &[usize], mappers: &[NumberMapper]) -> usize {
     nums.iter()
         .map(|num| {
             mappers
@@ -36,7 +36,7 @@ fn solve1(nums: &[u64], mappers: &[NumberMapper]) -> u64 {
         .unwrap()
 }
 
-fn solve2(nums: &[u64], mappers: &[NumberMapper]) -> u64 {
+fn solve2(nums: &[usize], mappers: &[NumberMapper]) -> usize {
     let sorted_input_ranges = nums
         .iter()
         .array_chunks()
@@ -106,17 +106,17 @@ fn solve2(nums: &[u64], mappers: &[NumberMapper]) -> u64 {
 
 #[derive(PartialEq, Debug, Clone)]
 struct NumberMap {
-    destination: u64,
-    destination_range: GenericRange<u64>,
-    source: u64,
-    source_range: GenericRange<u64>,
-    length: Option<u64>,
+    destination: usize,
+    destination_range: GenericRange<usize>,
+    source: usize,
+    source_range: GenericRange<usize>,
+    length: Option<usize>,
 }
 
 impl NumberMap {
     fn parse(input: &str) -> IResult<&str, Self> {
         map(
-            separated_list1(tag(" "), map(digit1, |s: &str| s.parse::<u64>().unwrap())),
+            separated_list1(tag(" "), map(digit1, |s: &str| s.parse::<usize>().unwrap())),
             |numbers| {
                 let (destination, source, length) = numbers.into_iter().collect_tuple().unwrap();
                 Self::new(destination, source, length)
@@ -124,7 +124,7 @@ impl NumberMap {
         )(input)
     }
 
-    fn new(destination: u64, source: u64, length: u64) -> Self {
+    fn new(destination: usize, source: usize, length: usize) -> Self {
         Self {
             destination,
             destination_range: GenericRange::from(destination..destination.saturating_add(length)),
@@ -172,12 +172,12 @@ impl NumberMap {
         ))
     }
 
-    fn map(&self, num: u64) -> u64 {
+    fn map(&self, num: usize) -> usize {
         assert!(self.source_range.contains(&num));
         num - self.source + self.destination
     }
 
-    fn reverse_map(&self, num: u64) -> u64 {
+    fn reverse_map(&self, num: usize) -> usize {
         assert!(self.destination_range.contains(&num));
         num - self.destination + self.source
     }
@@ -248,7 +248,7 @@ impl NumberMapper {
         Self { maps: new_maps }
     }
 
-    fn map(&self, num: u64) -> u64 {
+    fn map(&self, num: usize) -> usize {
         self.maps
             .iter()
             .find(|number_map| number_map.source_range.contains(&num))

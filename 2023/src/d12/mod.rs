@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use std::collections::HashMap;
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let springs_and_info = problem
         .lines()
         .map(|line| {
@@ -19,7 +19,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
     (solve1(springs_and_info.clone()), solve2(springs_and_info))
 }
 
-fn solve1(mut springs_and_info: Vec<(Vec<char>, Vec<usize>)>) -> u64 {
+fn solve1(mut springs_and_info: Vec<(Vec<char>, Vec<usize>)>) -> usize {
     springs_and_info
         .iter_mut()
         .map(|(springs, info)| {
@@ -31,7 +31,7 @@ fn solve1(mut springs_and_info: Vec<(Vec<char>, Vec<usize>)>) -> u64 {
         .sum()
 }
 
-fn solve2(mut springs_and_info: Vec<(Vec<char>, Vec<usize>)>) -> u64 {
+fn solve2(mut springs_and_info: Vec<(Vec<char>, Vec<usize>)>) -> usize {
     springs_and_info
         .iter_mut()
         .map(|(springs, runs_of_broken_springs)| {
@@ -58,8 +58,8 @@ fn num_configs(
     num_broken_springs: usize,
     s_idx: usize,
     r_idx: usize,
-    memory: &mut HashMap<(usize, usize, usize), u64>,
-) -> u64 {
+    memory: &mut HashMap<(usize, usize, usize), usize>,
+) -> usize {
     // using indexes instead of sub-slices is 4x faster
     let key = (s_idx, r_idx, num_broken_springs);
     if let Some(num) = memory.get(&key) {

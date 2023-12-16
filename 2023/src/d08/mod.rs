@@ -2,7 +2,7 @@ use itertools::Itertools;
 use num::Integer;
 use std::collections::HashMap;
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let steps = problem
         .lines()
         .next()
@@ -27,7 +27,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
     (solve1(&steps, &node_map), solve2(&steps, &node_map))
 }
 
-fn solve1(steps: &[Step], node_map: &HashMap<&str, (&str, &str)>) -> u64 {
+fn solve1(steps: &[Step], node_map: &HashMap<&str, (&str, &str)>) -> usize {
     let mut node = "AAA";
     let mut total_steps = 0;
     for step in steps.iter().cycle() {
@@ -43,7 +43,7 @@ fn solve1(steps: &[Step], node_map: &HashMap<&str, (&str, &str)>) -> u64 {
     total_steps
 }
 
-fn solve2(steps: &[Step], node_map: &HashMap<&str, (&str, &str)>) -> u64 {
+fn solve2(steps: &[Step], node_map: &HashMap<&str, (&str, &str)>) -> usize {
     let nodes = node_map
         .keys()
         .cloned()
@@ -58,7 +58,7 @@ fn solve2(steps: &[Step], node_map: &HashMap<&str, (&str, &str)>) -> u64 {
     loop_sizes
         .into_iter()
         .reduce(|prev_loop, curr_loop| prev_loop.lcm(&curr_loop))
-        .unwrap() as u64
+        .unwrap()
 }
 
 fn steps_to_see_z(

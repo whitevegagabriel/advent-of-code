@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let number_lists = problem
         .lines()
         .map(|line| {
@@ -12,21 +12,21 @@ pub fn solve(problem: &str) -> (u64, u64) {
     (solve1(&number_lists), solve2(&number_lists))
 }
 
-fn solve1(number_lists: &[Vec<i64>]) -> u64 {
+fn solve1(number_lists: &[Vec<i64>]) -> usize {
     number_lists
         .iter()
         .map(|list| next_number_of(list))
-        .sum::<i64>() as u64
+        .sum::<i64>() as usize
 }
 
-fn solve2(number_lists: &[Vec<i64>]) -> u64 {
+fn solve2(number_lists: &[Vec<i64>]) -> usize {
     number_lists
         .iter()
         .map(|list| {
             let rev_list = list.iter().cloned().rev().collect_vec();
             next_number_of(&rev_list)
         })
-        .sum::<i64>() as u64
+        .sum::<i64>() as usize
 }
 
 fn next_number_of(numbers: &[i64]) -> i64 {

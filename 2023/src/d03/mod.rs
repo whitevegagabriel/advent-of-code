@@ -1,7 +1,7 @@
 use crate::utils::get_square_neighbors;
 use std::collections::{HashMap, HashSet};
 
-pub fn solve(problem: &str) -> (u64, u64) {
+pub fn solve(problem: &str) -> (usize, usize) {
     let (schematic, height, width) = parse_schematic(problem);
     (
         solve1(&schematic, height, width),
@@ -9,7 +9,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
     )
 }
 
-fn solve1(schematic: &HashMap<Point, SchematicEntry>, height: usize, width: usize) -> u64 {
+fn solve1(schematic: &HashMap<Point, SchematicEntry>, height: usize, width: usize) -> usize {
     let mut part_numbers = Vec::new();
     for row_idx in 0..height {
         let mut part_number = 0;
@@ -39,8 +39,8 @@ fn solve1(schematic: &HashMap<Point, SchematicEntry>, height: usize, width: usiz
     part_numbers.iter().sum()
 }
 
-fn solve2(schematic: &HashMap<Point, SchematicEntry>, height: usize, width: usize) -> u64 {
-    let mut gear_part_numbers = HashMap::<_, Vec<u64>>::new();
+fn solve2(schematic: &HashMap<Point, SchematicEntry>, height: usize, width: usize) -> usize {
+    let mut gear_part_numbers = HashMap::<_, Vec<usize>>::new();
     for row_idx in 0..height {
         let mut part_number = 0;
         let mut connected_gears = HashSet::new();
@@ -75,7 +75,7 @@ fn solve2(schematic: &HashMap<Point, SchematicEntry>, height: usize, width: usiz
     gear_part_numbers
         .values()
         .map(|part_numbers| match part_numbers.len() {
-            2 => part_numbers.iter().product::<u64>(),
+            2 => part_numbers.iter().product::<usize>(),
             _ => 0,
         })
         .sum()
@@ -105,7 +105,7 @@ fn get_connected_gears(schematic: &HashMap<Point, SchematicEntry>, point: &Point
 type Point = (usize, usize);
 
 enum SchematicEntry {
-    Number(u64),
+    Number(usize),
     Symbol(char),
 }
 
@@ -119,7 +119,7 @@ fn parse_schematic(input: &str) -> (HashMap<Point, SchematicEntry>, usize, usize
             line.chars().enumerate().filter_map(move |(col_idx, c)| {
                 let point = (row_idx, col_idx);
                 if let Some(d) = c.to_digit(10) {
-                    Some((point, SchematicEntry::Number(d as u64)))
+                    Some((point, SchematicEntry::Number(d as usize)))
                 } else if c == '.' {
                     None
                 } else {
