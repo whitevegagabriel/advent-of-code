@@ -217,8 +217,8 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
         }],
         18 => vec![TestCase {
             problem,
-            answer1: 0,
-            answer2: 0,
+            answer1: 72821,
+            answer2: 127844509405501,
         }],
         19 => vec![TestCase {
             problem,

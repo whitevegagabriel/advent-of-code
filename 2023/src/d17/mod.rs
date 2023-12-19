@@ -1,8 +1,7 @@
 use crate::utils::{get_cross_neighbors, manhattan_distance};
 use itertools::Itertools;
 use pathfinding::prelude::astar;
-use std::ops::Range;
-use std::thread;
+use std::{ops::Range, thread};
 
 pub fn solve(problem: &str) -> (usize, usize) {
     let problem = problem
@@ -17,13 +16,9 @@ pub fn solve(problem: &str) -> (usize, usize) {
     let problem1 = problem.clone();
     let problem2 = problem;
 
-    let solution1 = thread::spawn(move || {
-        solve1(&problem1)
-    });
+    let solution1 = thread::spawn(move || solve1(&problem1));
 
-    let solution2 = thread::spawn(move || {
-        solve2(&problem2)
-    });
+    let solution2 = thread::spawn(move || solve2(&problem2));
 
     (solution1.join().unwrap(), solution2.join().unwrap())
 }
