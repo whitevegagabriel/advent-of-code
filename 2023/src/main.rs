@@ -41,6 +41,7 @@ fn main() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
 
     let cli = Cli::parse();
+    // let cli = Cli::parse_from(["", "20"]);
 
     let file = match cli.example {
         true => "example.txt",
@@ -227,8 +228,8 @@ fn get_real_testcases(day: u8, problem: &str) -> Vec<TestCase> {
         }],
         20 => vec![TestCase {
             problem,
-            answer1: 0,
-            answer2: 0,
+            answer1: 777666211,
+            answer2: 243081086866483,
         }],
         21 => vec![TestCase {
             problem,
