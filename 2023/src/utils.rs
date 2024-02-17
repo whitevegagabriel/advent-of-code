@@ -191,7 +191,7 @@ fn odd_median() {
     assert_eq!(2, median);
 }
 
-pub fn get_cross_neighbors<T: AsPrimitive<i64> + TryFrom<i64>>(point: &(T, T)) -> Vec<(T, T)> {
+pub fn get_cross_neighbors<T: AsPrimitive<isize> + TryFrom<isize>>(point: &(T, T)) -> Vec<(T, T)> {
     let point = (point.0.as_(), point.1.as_());
     [-1, 0, 1, 0]
         .into_iter()
@@ -200,8 +200,8 @@ pub fn get_cross_neighbors<T: AsPrimitive<i64> + TryFrom<i64>>(point: &(T, T)) -
         .collect_vec()
 }
 
-pub fn get_square_neighbors<T: AsPrimitive<i64> + TryFrom<i64>>(point: &(T, T)) -> Vec<(T, T)> {
-    let point: (i64, i64) = (point.0.as_(), point.1.as_());
+pub fn get_square_neighbors<T: AsPrimitive<isize> + TryFrom<isize>>(point: &(T, T)) -> Vec<(T, T)> {
+    let point: (isize, isize) = (point.0.as_(), point.1.as_());
     [-1, 0, 1, -1, 1, -1, 0, 1]
         .into_iter()
         .zip([-1, -1, -1, 0, 0, 1, 1, 1])
@@ -209,9 +209,9 @@ pub fn get_square_neighbors<T: AsPrimitive<i64> + TryFrom<i64>>(point: &(T, T)) 
         .collect_vec()
 }
 
-fn maybe_add<T: AsPrimitive<i64> + TryFrom<i64>>(
-    p1: &(i64, i64),
-    p2: &(i64, i64),
+fn maybe_add<T: AsPrimitive<isize> + TryFrom<isize>>(
+    p1: &(isize, isize),
+    p2: &(isize, isize),
 ) -> Option<(T, T)> {
     let row_new = T::try_from(p1.0 + p2.0);
     let col_new = T::try_from(p1.1 + p2.1);

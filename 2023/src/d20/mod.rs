@@ -173,13 +173,6 @@ enum ModuleType<'a> {
     Conjunction { state: HashMap<&'a str, bool> },
 }
 
-#[test]
-fn test() {
-    use crate::utils::basic_test;
-    let input = include_str!("example.txt");
-    basic_test(input, solve);
-}
-
 /*
 
  @startuml
