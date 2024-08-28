@@ -1,7 +1,7 @@
 use crate::utils::{manhattan_distance, parse_matrix_of_nums};
 use itertools::Itertools;
 use pathfinding::prelude::astar;
-use std::{cmp::Ordering, collections::HashMap, hash::Hash};
+use std::{collections::HashMap, hash::Hash};
 
 pub fn solve(problem: &str) -> (u64, u64) {
     let problem = &problem.lines().collect_vec();
@@ -100,24 +100,6 @@ fn min_cost_astar(distance_to: &HashMap<(usize, usize), u64>) -> u64 {
     )
     .unwrap();
     result.1
-}
-
-#[derive(PartialEq, Eq)]
-struct AStarState {
-    pos: (usize, usize),
-    f: u64,
-}
-
-impl PartialOrd<Self> for AStarState {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl Ord for AStarState {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.f.cmp(&other.f).reverse()
-    }
 }
 
 #[test]

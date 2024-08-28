@@ -85,7 +85,7 @@ pub fn parse_example_testcases(input: &str) -> Vec<TestCase> {
         .collect_vec()
 }
 
-pub fn transposed<T: Clone>(matrix: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+pub fn transposed<T: Clone>(matrix: &[Vec<T>]) -> Vec<Vec<T>> {
     let rows = matrix.len();
     let cols = matrix[0].len();
 

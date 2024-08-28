@@ -69,7 +69,7 @@ impl<'a> Sorter<'a> {
     fn parse(input: &'a str) -> Self {
         let checkers = input
             .split(",")
-            .map(|checker| Checker::parse(checker))
+            .map(Checker::parse)
             .collect_vec();
         Self { checkers }
     }

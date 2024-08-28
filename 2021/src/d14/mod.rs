@@ -21,7 +21,7 @@ pub fn solve(problem: &str) -> (u64, u64) {
     (solve1(template, &rules), solve2(template, &rules))
 }
 
-fn solve1(template: &str, rules: &HashMap<(char, char), char>) -> u64 {
+fn solve1(template: &str, rules: &HashMap<InsertionPair, char>) -> u64 {
     // brute force
     let polymer = (0..10).fold(template.chars().collect_vec(), |state, _| {
         let poly_insertions = state
@@ -38,7 +38,7 @@ fn solve1(template: &str, rules: &HashMap<(char, char), char>) -> u64 {
     u64::try_from(max - min).unwrap()
 }
 
-fn solve2(template: &str, rules: &HashMap<(char, char), char>) -> u64 {
+fn solve2(template: &str, rules: &HashMap<InsertionPair, char>) -> u64 {
     // cache-based recursive solution
     let mut counts = template.chars().counts();
     let mut cache = HashMap::new();
@@ -53,11 +53,13 @@ fn solve2(template: &str, rules: &HashMap<(char, char), char>) -> u64 {
     u64::try_from(max - min).unwrap()
 }
 
+type InsertionPair = (char, char);
+
 fn polymer_counts(
-    pair: &(char, char),
-    rules: &HashMap<(char, char), char>,
+    pair: &InsertionPair,
+    rules: &HashMap<InsertionPair, char>,
     depth: usize,
-    cache: &mut HashMap<((char, char), usize), BTreeMap<char, usize>>,
+    cache: &mut HashMap<(InsertionPair, usize), BTreeMap<char, usize>>,
 ) -> BTreeMap<char, usize> {
     let cache_key = (*pair, depth);
     if let Some(counts) = cache.get(&cache_key) {
@@ -65,13 +67,16 @@ fn polymer_counts(
     }
 
     let to_insert = rules.get(pair).unwrap();
-    if depth == 1 {
-        let mut counts = BTreeMap::new();
-        counts.insert(*to_insert, 1);
-        cache.insert(cache_key, counts.clone());
-        counts
-    } else if depth > 1 {
-        let left_path = (pair.0, *to_insert);
+
+    match depth.cmp(&1) {
+        std::cmp::Ordering::Equal => {
+            let mut counts = BTreeMap::new();
+            counts.insert(*to_insert, 1);
+            cache.insert(cache_key, counts.clone());
+            counts
+        }
+        std::cmp::Ordering::Greater => {
+            let left_path = (pair.0, *to_insert);
         let right_path = (*to_insert, pair.1);
         let mut left_counts = polymer_counts(&left_path, rules, depth - 1, cache);
         let right_counts = polymer_counts(&right_path, rules, depth - 1, cache);
@@ -81,8 +86,8 @@ fn polymer_counts(
         left_counts.entry(*to_insert).or_default().add_assign(1);
         cache.insert(cache_key, left_counts.clone());
         left_counts
-    } else {
-        panic!("how about no")
+    }
+        _ => panic!("how about no"),
     }
 }
 
