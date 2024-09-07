@@ -67,10 +67,7 @@ struct Sorter<'a> {
 
 impl<'a> Sorter<'a> {
     fn parse(input: &'a str) -> Self {
-        let checkers = input
-            .split(",")
-            .map(Checker::parse)
-            .collect_vec();
+        let checkers = input.split(",").map(Checker::parse).collect_vec();
         Self { checkers }
     }
 
