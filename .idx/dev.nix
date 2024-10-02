@@ -14,6 +14,7 @@
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
       "rust-lang.rust-analyzer"
+      "tamasfe.even-better-toml"
     ];
 
     previews = {
