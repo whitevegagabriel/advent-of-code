@@ -7,11 +7,16 @@ lazy_static! {
 
 #[allow(unused)]
 pub(crate) fn test<T: Debug + Eq, F: Fn(&str) -> T>(input_file: &PathBuf, f: F, expected: T) {
-    test_with_params(input_file, |s: &str, _: ()| { f(s) }, (), expected);
+    test_with_params(input_file, |s: &str, _: ()| f(s), (), expected);
 }
 
 #[allow(unused)]
-pub(crate) fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(input_file: &PathBuf, f: F, params: P, expected: T) {
+pub(crate) fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
+    input_file: &PathBuf,
+    f: F,
+    params: P,
+    expected: T,
+) {
     let start = time::Instant::now();
     {
         let input = read_to_string(input_file).unwrap();
