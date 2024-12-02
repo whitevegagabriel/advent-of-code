@@ -1,4 +1,4 @@
-use std::{cmp::Eq, env, fmt::Debug, fs::read_to_string, time};
+use std::{cmp::Eq, env, fmt::Debug, fs::read_to_string, thread::sleep, time::{self, Duration}};
 
 #[allow(unused)]
 pub(crate) fn test<T: Debug + Eq, F: Fn(&str) -> T>(
@@ -33,9 +33,17 @@ pub(crate) fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
         assert_eq!(expected, actual);
     }
     let elapsed = start.elapsed();
-    println!("Elapsed: {} millis", elapsed.as_millis());
+    
+    let (time, units) = if elapsed.as_secs() >= 1 {
+        (elapsed.as_millis(), "ms")
+    } else {
+        (elapsed.as_micros(), "μs")
+    };
+    
+    println!("Elapsed: {time} {units}");
 }
 
+#[allow(unused)]
 pub(crate) enum PuzzleInputType {
     Input,
     Example,
