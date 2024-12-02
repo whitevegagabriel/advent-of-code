@@ -1,26 +1,28 @@
-use crate::common::test;
+use crate::common::{
+    test,
+    PuzzleInputType::{Example, Input},
+};
 
-const INPUT_FILE: &str = "src/d3/input.txt";
-const EXAMPLE_FILE: &str = "src/d3/example.txt";
+const MODULE: &str = module_path!();
 
 #[test]
 fn p1_example() {
-    test(EXAMPLE_FILE, p1, 0);
+    test(&Example, MODULE, p1, 0);
 }
 
 #[test]
 fn p1_input() {
-    test(INPUT_FILE, p1, 0);
+    test(&Input, MODULE, p1, 0);
 }
 
 #[test]
 fn p2_example() {
-    test(EXAMPLE_FILE, p2, 0);
+    test(&Example, MODULE, p2, 0);
 }
 
 #[test]
 fn p2_input() {
-    test(INPUT_FILE, p2, 0);
+    test(&Input, MODULE, p2, 0);
 }
 
 fn p1(_input: &str) -> usize {

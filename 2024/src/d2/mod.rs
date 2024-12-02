@@ -1,27 +1,29 @@
-use crate::common::test;
+use crate::common::{
+    test,
+    PuzzleInputType::{Example, Input},
+};
 use itertools::Itertools;
 
-const INPUT_FILE: &str = "src/d2/input.txt";
-const EXAMPLE_FILE: &str = "src/d2/example.txt";
+const MODULE: &str = module_path!();
 
 #[test]
 fn p1_example() {
-    test(EXAMPLE_FILE, p1, 2);
+    test(&Example, MODULE, p1, 2);
 }
 
 #[test]
 fn p1_input() {
-    test(INPUT_FILE, p1, 564);
+    test(&Input, MODULE, p1, 564);
 }
 
 #[test]
 fn p2_example() {
-    test(EXAMPLE_FILE, p2, 4);
+    test(&Example, MODULE, p2, 4);
 }
 
 #[test]
 fn p2_input() {
-    test(INPUT_FILE, p2, 604);
+    test(&Input, MODULE, p2, 604);
 }
 
 fn p1(input: &str) -> usize {
