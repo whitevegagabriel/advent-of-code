@@ -1,31 +1,27 @@
-use crate::common::{test, MANIFEST_DIR};
+use crate::common::test;
 use itertools::Itertools;
-use lazy_static::lazy_static;
-use std::path::PathBuf;
 
-lazy_static! {
-    static ref INPUT_FILE: PathBuf = format!("{}/src/d1/input.txt", *MANIFEST_DIR).into();
-    static ref EXAMPLE_FILE: PathBuf = format!("{}/src/d1/example.txt", *MANIFEST_DIR).into();
-}
+const INPUT_FILE: &str = "src/d1/input.txt";
+const EXAMPLE_FILE: &str = "src/d1/example.txt";
 
 #[test]
 fn p1_example() {
-    test(&EXAMPLE_FILE, p1, 11);
+    test(EXAMPLE_FILE, p1, 11);
 }
 
 #[test]
 fn p1_input() {
-    test(&INPUT_FILE, p1, 1834060);
+    test(INPUT_FILE, p1, 1834060);
 }
 
 #[test]
 fn p2_example() {
-    test(&EXAMPLE_FILE, p2, 31);
+    test(EXAMPLE_FILE, p2, 31);
 }
 
 #[test]
 fn p2_input() {
-    test(&INPUT_FILE, p2, 21607792);
+    test(INPUT_FILE, p2, 21607792);
 }
 
 fn p1(input: &str) -> usize {
