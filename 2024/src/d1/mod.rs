@@ -1,29 +1,26 @@
-use crate::common::{
-    test,
-    PuzzleInputType::{Example, Input},
-};
+use crate::common::test;
 use itertools::Itertools;
 
 const MODULE: &str = module_path!();
 
 #[test]
 fn p1_example() {
-    test(&Example, MODULE, p1, 11);
+    test("example", MODULE, p1, 11);
 }
 
 #[test]
 fn p1_input() {
-    test(&Input, MODULE, p1, 1834060);
+    test("input", MODULE, p1, 1834060);
 }
 
 #[test]
 fn p2_example() {
-    test(&Example, MODULE, p2, 31);
+    test("example", MODULE, p2, 31);
 }
 
 #[test]
 fn p2_input() {
-    test(&Input, MODULE, p2, 21607792);
+    test("input", MODULE, p2, 21607792);
 }
 
 fn p1(input: &str) -> usize {
