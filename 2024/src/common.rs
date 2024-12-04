@@ -1,4 +1,11 @@
-use std::{cmp::Eq, env, fmt::Debug, fs::read_to_string, time};
+use std::{
+    cmp::Eq,
+    env,
+    fmt::Debug,
+    fs::read_to_string,
+    ops::{Add, AddAssign, Neg},
+    time,
+};
 
 #[allow(unused)]
 pub(crate) fn test<T: Debug + Eq, F: Fn(&str) -> T>(
@@ -37,4 +44,43 @@ pub(crate) fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
     };
 
     println!("Elapsed: {time} {units}");
+}
+
+#[derive(Copy, Clone)]
+pub(crate) struct Point2<T: Copy> {
+    pub(crate) x: T,
+    pub(crate) y: T,
+}
+
+impl<T: Add<Output = T> + Copy> Add<Vector2<T>> for Point2<T> {
+    type Output = Point2<T>;
+    fn add(self, v: Vector2<T>) -> Self::Output {
+        Point2 {
+            x: self.x + v.x,
+            y: self.y + v.y,
+        }
+    }
+}
+
+impl<T: Add<Output = T> + Copy> AddAssign<Vector2<T>> for Point2<T> {
+    fn add_assign(&mut self, v: Vector2<T>) {
+        *self = *self + v;
+    }
+}
+
+#[derive(Copy, Clone)]
+pub(crate) struct Vector2<T: Copy> {
+    pub(crate) x: T,
+    pub(crate) y: T,
+}
+
+impl<T: Copy + Neg<Output = T>> Neg for Vector2<T> {
+    type Output = Self;
+
+    fn neg(self) -> Self {
+        Self {
+            x: -self.x,
+            y: -self.y,
+        }
+    }
 }
