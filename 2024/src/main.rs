@@ -1,5 +1,3 @@
-#![feature(lazy_cell)]
-
 mod common;
 #[cfg(test)]
 mod d1;
