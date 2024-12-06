@@ -1,3 +1,4 @@
+use num_traits::Num;
 use std::{
     cmp::Eq,
     env,
@@ -7,8 +8,7 @@ use std::{
     time,
 };
 
-#[allow(unused)]
-pub(crate) fn test<T: Debug + Eq, F: Fn(&str) -> T>(
+pub fn test<T: Debug + Eq, F: Fn(&str) -> T>(
     file_name: &str,
     module_path: &str,
     f: F,
@@ -17,8 +17,7 @@ pub(crate) fn test<T: Debug + Eq, F: Fn(&str) -> T>(
     test_with_params(file_name, module_path, |s: &str, _: ()| f(s), (), expected);
 }
 
-#[allow(unused)]
-pub(crate) fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
+pub fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
     file_name: &str,
     module_path: &str,
     f: F,
@@ -46,13 +45,13 @@ pub(crate) fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
     println!("Elapsed: {time} {units}");
 }
 
-#[derive(Copy, Clone)]
-pub(crate) struct Point2<T: Copy> {
+#[derive(Copy, Clone, Hash, Eq, PartialEq, Debug)]
+pub struct Point2<T> {
     pub(crate) x: T,
     pub(crate) y: T,
 }
 
-impl<T: Add<Output = T> + Copy> Add<Vector2<T>> for Point2<T> {
+impl<T: Num + Copy> Add<Vector2<T>> for Point2<T> {
     type Output = Point2<T>;
     fn add(self, v: Vector2<T>) -> Self::Output {
         Point2 {
@@ -62,19 +61,36 @@ impl<T: Add<Output = T> + Copy> Add<Vector2<T>> for Point2<T> {
     }
 }
 
-impl<T: Add<Output = T> + Copy> AddAssign<Vector2<T>> for Point2<T> {
+impl<T: Num + Copy> AddAssign<Vector2<T>> for Point2<T> {
     fn add_assign(&mut self, v: Vector2<T>) {
         *self = *self + v;
     }
 }
 
-#[derive(Copy, Clone)]
-pub(crate) struct Vector2<T: Copy> {
+#[derive(Copy, Clone, Debug)]
+pub struct Vector2<T> {
     pub(crate) x: T,
     pub(crate) y: T,
 }
 
-impl<T: Copy + Neg<Output = T>> Neg for Vector2<T> {
+impl<T: Copy + Neg<Output = T>> Vector2<T> {
+    pub fn rotate_90(&mut self, rotation_direction: RotationDirection) {
+        match rotation_direction {
+            RotationDirection::Clockwise => {
+                let x_prev = self.x;
+                self.x = self.y;
+                self.y = -x_prev;
+            }
+            RotationDirection::Counterclockwise => {
+                let x_prev = self.x;
+                self.x = -self.y;
+                self.y = x_prev;
+            }
+        }
+    }
+}
+
+impl<T: Neg<Output = T>> Neg for Vector2<T> {
     type Output = Self;
 
     fn neg(self) -> Self {
@@ -83,4 +99,9 @@ impl<T: Copy + Neg<Output = T>> Neg for Vector2<T> {
             y: -self.y,
         }
     }
+}
+
+pub enum RotationDirection {
+    Clockwise,
+    Counterclockwise,
 }
