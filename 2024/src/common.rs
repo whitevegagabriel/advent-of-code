@@ -4,7 +4,7 @@ use std::{
     env,
     fmt::Debug,
     fs::read_to_string,
-    ops::{Add, AddAssign, Neg},
+    ops::{Add, AddAssign, Mul, Neg, Sub, SubAssign},
     time,
 };
 
@@ -53,21 +53,38 @@ pub struct Point2<T> {
 
 impl<T: Num + Copy> Add<Vector2<T>> for Point2<T> {
     type Output = Point2<T>;
-    fn add(self, v: Vector2<T>) -> Self::Output {
+    fn add(self, rhs: Vector2<T>) -> Self::Output {
         Point2 {
-            x: self.x + v.x,
-            y: self.y + v.y,
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
         }
     }
 }
 
 impl<T: Num + Copy> AddAssign<Vector2<T>> for Point2<T> {
-    fn add_assign(&mut self, v: Vector2<T>) {
-        *self = *self + v;
+    fn add_assign(&mut self, rhs: Vector2<T>) {
+        *self = *self + rhs;
     }
 }
 
-#[derive(Copy, Clone, Debug)]
+impl<T: Num + Sub<Output = T>> Sub<Vector2<T>> for Point2<T> {
+    type Output = Self;
+
+    fn sub(self, rhs: Vector2<T>) -> Self::Output {
+        Self {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
+impl<T: Num + Copy> SubAssign<Vector2<T>> for Point2<T> {
+    fn sub_assign(&mut self, rhs: Vector2<T>) {
+        *self = *self - rhs;
+    }
+}
+
+#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
 pub struct Vector2<T> {
     pub(crate) x: T,
     pub(crate) y: T,
@@ -97,6 +114,16 @@ impl<T: Neg<Output = T>> Neg for Vector2<T> {
         Self {
             x: -self.x,
             y: -self.y,
+        }
+    }
+}
+
+impl<T: Num + Copy> Mul<T> for Vector2<T> {
+    type Output = Self;
+    fn mul(self, num: T) -> Self::Output {
+        Self {
+            x: self.x * num,
+            y: self.y * num,
         }
     }
 }

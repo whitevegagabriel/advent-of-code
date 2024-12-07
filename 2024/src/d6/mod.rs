@@ -1,4 +1,4 @@
-use crate::common::{test, Point2, RotationDirection::Counterclockwise, Vector2};
+use crate::common::{test, Point2, RotationDirection::Clockwise, Vector2};
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet};
 
@@ -11,49 +11,87 @@ fn p1_example() {
 
 #[test]
 fn p1_input() {
-    test("input", MODULE, p1, 0);
+    test("input", MODULE, p1, 4778);
 }
 
 #[test]
 fn p2_example() {
-    test("example", MODULE, p2, 0);
+    test("example", MODULE, p2, 6);
 }
 
 #[test]
 fn p2_input() {
-    test("input", MODULE, p2, 0);
+    test("input", MODULE, p2, 1618);
 }
 
 fn p1(input: &str) -> usize {
     let (grid, start) = parse_input(input);
 
-    let guard_position_iter = GuardPositionIterator {
-        grid,
+    let visited = get_visited_positions(&grid, start);
+
+    visited.len()
+}
+
+fn p2(input: &str) -> usize {
+    let (grid, start) = parse_input(input);
+    let visited = get_visited_positions(&grid, start);
+    let start_dir = Vector2 { x: 0, y: 1 };
+
+    let mut guard_position_iter = GuardPositionIterator {
+        grid: grid.clone(),
         position: Some(start),
-        direction: Vector2 { x: 0, y: -1 },
+        direction: start_dir,
+    };
+    let mut obstacle_positions = HashSet::new();
+
+    for pos in visited {
+        if grid[&pos] == '#' {
+            continue;
+        }
+
+        guard_position_iter.grid.insert(pos, '#');
+
+        let mut seen = HashSet::from([(start, start_dir)]);
+
+        for (inner_pos, inner_dir) in &mut guard_position_iter {
+            if seen.contains(&(inner_pos, inner_dir)) {
+                obstacle_positions.insert(pos);
+                break;
+            }
+            seen.insert((inner_pos, inner_dir));
+        }
+
+        guard_position_iter.grid.insert(pos, '.');
+        guard_position_iter.position = Some(start);
+        guard_position_iter.direction = start_dir;
+    }
+
+    obstacle_positions.len()
+}
+
+fn get_visited_positions(
+    grid: &HashMap<Point2<isize>, char>,
+    start: Point2<isize>,
+) -> HashSet<Point2<isize>> {
+    let guard_position_iter = GuardPositionIterator {
+        grid: grid.clone(),
+        position: Some(start),
+        direction: Vector2 { x: 0, y: 1 },
     };
 
     let mut seen = HashSet::from([start]);
-    let mut c = 0;
 
-    for pos in guard_position_iter {
-        if c < 10 {
-            dbg!(&pos);
-            c += 1;
-        }
+    for (pos, _) in guard_position_iter {
         seen.insert(pos);
     }
 
-    seen.len()
-}
-
-fn p2(_input: &str) -> usize {
-    0
+    seen
 }
 
 fn parse_input(input: &str) -> (HashMap<Point2<isize>, char>, Point2<isize>) {
     let grid: HashMap<_, _> = input
         .lines()
+        .rev()
         .enumerate()
         .flat_map(|(line_idx, line)| {
             line.chars()
@@ -86,7 +124,7 @@ struct GuardPositionIterator {
 }
 
 impl Iterator for GuardPositionIterator {
-    type Item = Point2<isize>;
+    type Item = (Point2<isize>, Vector2<isize>);
 
     fn next(&mut self) -> Option<Self::Item> {
         let position = self.position?;
@@ -97,11 +135,11 @@ impl Iterator for GuardPositionIterator {
         }
 
         while self.grid[&(position + self.direction)] == '#' {
-            self.direction.rotate_90(Counterclockwise)
+            self.direction.rotate_90(Clockwise)
         }
 
         self.position = Some(position + self.direction);
 
-        self.position
+        self.position.map(|p| (p, self.direction))
     }
 }

@@ -1,3 +1,5 @@
+#![feature(let_chains)]
+
 pub mod common;
 #[cfg(test)]
 mod d1;
