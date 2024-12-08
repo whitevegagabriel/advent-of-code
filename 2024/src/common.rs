@@ -1,9 +1,13 @@
+use itertools::Itertools;
+use num::{integer::gcd, Integer};
 use num_traits::Num;
 use std::{
     cmp::Eq,
+    collections::HashMap,
     env,
     fmt::Debug,
     fs::read_to_string,
+    hash::Hash,
     ops::{Add, AddAssign, Mul, Neg, Sub, SubAssign},
     time,
 };
@@ -84,13 +88,24 @@ impl<T: Num + Copy> SubAssign<Vector2<T>> for Point2<T> {
     }
 }
 
+impl<T: Num + Sub<Output = T>> Sub<Point2<T>> for Point2<T> {
+    type Output = Vector2<T>;
+
+    fn sub(self, rhs: Point2<T>) -> Self::Output {
+        Vector2 {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
 #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
 pub struct Vector2<T> {
     pub(crate) x: T,
     pub(crate) y: T,
 }
 
-impl<T: Copy + Neg<Output = T>> Vector2<T> {
+impl<T: Copy + Neg<Output = T> + Integer> Vector2<T> {
     pub fn rotate_90(&mut self, rotation_direction: RotationDirection) {
         match rotation_direction {
             RotationDirection::Clockwise => {
@@ -104,6 +119,12 @@ impl<T: Copy + Neg<Output = T>> Vector2<T> {
                 self.y = x_prev;
             }
         }
+    }
+
+    pub fn simplify(&mut self) {
+        let divisor = gcd(self.x, self.y);
+        self.x = self.x / divisor;
+        self.y = self.y / divisor;
     }
 }
 
@@ -131,4 +152,26 @@ impl<T: Num + Copy> Mul<T> for Vector2<T> {
 pub enum RotationDirection {
     Clockwise,
     Counterclockwise,
+}
+
+pub fn parse_to_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point2<T>, char> {
+    input
+        .lines()
+        .rev()
+        .enumerate()
+        .flat_map(|(line_idx, line)| {
+            line.chars()
+                .enumerate()
+                .map(|(c_idx, c)| {
+                    (
+                        Point2 {
+                            x: c_idx.try_into().ok().unwrap(),
+                            y: line_idx.try_into().ok().unwrap(),
+                        },
+                        c,
+                    )
+                })
+                .collect_vec()
+        })
+        .collect()
 }
