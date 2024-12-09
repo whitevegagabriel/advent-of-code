@@ -2,23 +2,25 @@
 
 pub mod common;
 #[cfg(test)]
-mod d1;
+mod d01;
 #[cfg(test)]
-mod d2;
+mod d02;
 #[cfg(test)]
-mod d3;
+mod d03;
 #[cfg(test)]
-mod d4;
+mod d04;
 #[cfg(test)]
-mod d5;
+mod d05;
 #[cfg(test)]
-mod d6;
+mod d06;
 #[cfg(test)]
-mod d7;
+mod d07;
 #[cfg(test)]
-mod d8;
+mod d08;
 #[cfg(test)]
-mod d9;
+mod d09;
+#[cfg(test)]
+mod d10;
 
 fn main() {
     println!("Advent of Code 2024");
