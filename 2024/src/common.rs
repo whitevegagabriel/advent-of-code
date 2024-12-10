@@ -154,7 +154,15 @@ pub enum RotationDirection {
     Counterclockwise,
 }
 
-pub fn parse_to_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point2<T>, char> {
+pub fn parse_to_usize_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point2<T>, usize> {
+    parse_to_map(input, |c| c as usize - '0' as usize)
+}
+
+pub fn parse_to_char_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point2<T>, char> {
+    parse_to_map(input, |c| c)
+}
+
+fn parse_to_map<T: TryFrom<usize> + Eq + Hash, V, F: Fn(char) -> V>(input: &str, mapper: F) -> HashMap<Point2<T>, V> {
     input
         .lines()
         .rev()
@@ -168,10 +176,33 @@ pub fn parse_to_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point
                             x: c_idx.try_into().ok().unwrap(),
                             y: line_idx.try_into().ok().unwrap(),
                         },
-                        c,
+                        mapper(c),
                     )
                 })
                 .collect_vec()
         })
         .collect()
+}
+
+pub fn get_cross_neighbors<T: Integer + Neg<Output = T> + Copy>(curr: Point2<T>) -> Vec<Point2<T>> {
+    [
+        Vector2 {
+            x: -T::one(),
+            y: T::zero(),
+        },
+        Vector2 {
+            x: T::one(),
+            y: T::zero(),
+        },
+        Vector2 {
+            x: T::zero(),
+            y: -T::one(),
+        },
+        Vector2 {
+            x: T::zero(),
+            y: T::one(),
+        },
+    ].iter().map(|dir| {
+        curr + *dir
+    }).collect()
 }

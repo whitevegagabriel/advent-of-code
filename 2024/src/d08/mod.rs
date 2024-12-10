@@ -1,4 +1,4 @@
-use crate::common::{parse_to_map, test, Point2};
+use crate::common::{parse_to_char_map, test, Point2};
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet};
 
@@ -25,7 +25,7 @@ fn p2_input() {
 }
 
 fn p1(input: &str) -> usize {
-    let grid = parse_to_map::<isize>(input);
+    let grid = parse_to_char_map::<isize>(input);
     let node_positions = get_node_positions(&grid);
 
     let mut antinodes = HashSet::new();
@@ -49,7 +49,7 @@ fn p1(input: &str) -> usize {
 }
 
 fn p2(input: &str) -> usize {
-    let grid = parse_to_map::<isize>(input);
+    let grid = parse_to_char_map::<isize>(input);
     let node_positions = get_node_positions(&grid);
 
     let mut antinodes = HashSet::new();

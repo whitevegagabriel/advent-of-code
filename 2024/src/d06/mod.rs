@@ -1,4 +1,4 @@
-use crate::common::{parse_to_map, test, Point2, RotationDirection::Clockwise, Vector2};
+use crate::common::{parse_to_char_map, test, Point2, RotationDirection::Clockwise, Vector2};
 use std::collections::{HashMap, HashSet};
 
 const MODULE: &str = module_path!();
@@ -88,7 +88,7 @@ fn get_visited_positions(
 }
 
 fn parse_input(input: &str) -> (HashMap<Point2<isize>, char>, Point2<isize>) {
-    let grid = parse_to_map(input);
+    let grid = parse_to_char_map(input);
 
     let start = grid
         .iter()
