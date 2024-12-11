@@ -162,7 +162,10 @@ pub fn parse_to_char_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<
     parse_to_map(input, |c| c)
 }
 
-fn parse_to_map<T: TryFrom<usize> + Eq + Hash, V, F: Fn(char) -> V>(input: &str, mapper: F) -> HashMap<Point2<T>, V> {
+fn parse_to_map<T: TryFrom<usize> + Eq + Hash, V, F: Fn(char) -> V>(
+    input: &str,
+    mapper: F,
+) -> HashMap<Point2<T>, V> {
     input
         .lines()
         .rev()
@@ -202,7 +205,12 @@ pub fn get_cross_neighbors<T: Integer + Neg<Output = T> + Copy>(curr: Point2<T>)
             x: T::zero(),
             y: T::one(),
         },
-    ].iter().map(|dir| {
-        curr + *dir
-    }).collect()
+    ]
+    .iter()
+    .map(|dir| curr + *dir)
+    .collect()
+}
+
+pub fn count_digits(num: usize) -> usize {
+    (num.checked_ilog10().unwrap_or(0) + 1) as usize
 }
