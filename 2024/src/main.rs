@@ -1,4 +1,6 @@
 #![feature(let_chains)]
+#![feature(hash_extract_if)]
+#![feature(extract_if)]
 
 pub mod common;
 #[cfg(test)]

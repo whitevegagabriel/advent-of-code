@@ -1,3 +1,4 @@
+use crate::common::Direction::{Down, Left, Right, Up};
 use itertools::Itertools;
 use num::{integer::gcd, Integer};
 use num_traits::Num;
@@ -211,6 +212,52 @@ pub fn get_cross_neighbors<T: Integer + Neg<Output = T> + Copy>(curr: Point2<T>)
     .collect()
 }
 
+pub fn get_cross_neighbors_with_direction<T: Integer + Neg<Output = T> + Copy>(
+    curr: Point2<T>,
+) -> Vec<(Point2<T>, Direction)> {
+    [
+        (
+            Vector2 {
+                x: -T::one(),
+                y: T::zero(),
+            },
+            Left,
+        ),
+        (
+            Vector2 {
+                x: T::one(),
+                y: T::zero(),
+            },
+            Right,
+        ),
+        (
+            Vector2 {
+                x: T::zero(),
+                y: -T::one(),
+            },
+            Down,
+        ),
+        (
+            Vector2 {
+                x: T::zero(),
+                y: T::one(),
+            },
+            Up,
+        ),
+    ]
+    .into_iter()
+    .map(|(diff, dir)| (curr + diff, dir))
+    .collect()
+}
+
 pub fn count_digits(num: usize) -> usize {
     (num.checked_ilog10().unwrap_or(0) + 1) as usize
+}
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
 }
