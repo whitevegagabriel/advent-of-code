@@ -261,3 +261,21 @@ pub enum Direction {
     Left,
     Right,
 }
+
+pub trait AsPoint2<'a, T> {
+    fn as_point2(&'a self) -> &'a Point2<T>;
+}
+
+pub fn visualize<'a, T: Copy + TryInto<usize> + 'a, P: AsPoint2<'a, T>>(
+    points: &'a [P],
+    width: usize,
+    height: usize,
+) -> String {
+    let mut canvas = vec![vec![' '; width]; height];
+    for point in points {
+        let y_idx = point.as_point2().y.try_into().ok().unwrap();
+        let x_idx = point.as_point2().x.try_into().ok().unwrap();
+        canvas[y_idx][x_idx] = '*';
+    }
+    canvas.iter().map(|chars| chars.iter().join("")).join("\n")
+}

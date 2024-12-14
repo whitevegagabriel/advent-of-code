@@ -52,22 +52,28 @@ fn p2(input: &str) -> usize {
         config.prize.x += 10000000000000;
         config.prize.y += 10000000000000;
     }
-    
+
     let a_cost = 3;
     let b_cost = 1;
     machine_configs
         .iter()
         .filter_map(|config| {
-            let (ax, ay) = (config.button_a_mod.x as isize, config.button_a_mod.y as isize);
-            let (bx, by) = (config.button_b_mod.x as isize, config.button_b_mod.y as isize);
+            let (ax, ay) = (
+                config.button_a_mod.x as isize,
+                config.button_a_mod.y as isize,
+            );
+            let (bx, by) = (
+                config.button_b_mod.x as isize,
+                config.button_b_mod.y as isize,
+            );
             let (px, py) = (config.prize.x as isize, config.prize.y as isize);
             let b_uses = (ax * py - ay * px) / (ax * by - ay * bx);
             let a_uses = (px - bx * b_uses) / ax;
-            
+
             if b_uses < 0 || a_uses < 0 {
                 return None;
             }
-            
+
             if ax * a_uses + bx * b_uses == px && ay * a_uses + by * b_uses == py {
                 Some((a_cost * a_uses + b_cost * b_uses) as usize)
             } else {
