@@ -1,4 +1,4 @@
-use crate::common::{test_with_params, visualize, AsPoint2, Point2, Vector2};
+use crate::common::{test_with_params, visualize_points, AsPoint2, Point2, Vector2};
 use average::Variance;
 use itertools::Itertools;
 use regex::Regex;
@@ -105,9 +105,9 @@ fn p2(input: &str, dimensions: (isize, isize)) -> usize {
     for robot in &mut robots {
         robot.step(steps);
     }
-    let visualized = visualize(&robots, width as usize, height as usize);
+    let visualized = visualize_points(&robots, width as usize, height as usize);
     println!("{visualized}");
-    
+
     steps as usize
 }
 

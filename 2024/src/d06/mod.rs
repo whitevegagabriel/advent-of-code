@@ -34,7 +34,7 @@ fn p1(input: &str) -> usize {
 fn p2(input: &str) -> usize {
     let (grid, start) = parse_input(input);
     let visited = get_visited_positions(&grid, start);
-    let start_dir = Vector2 { x: 0, y: 1 };
+    let start_dir = Vector2 { x: 0, y: -1 };
 
     let mut guard_position_iter = GuardPositionIterator {
         grid: grid.clone(),
@@ -75,7 +75,7 @@ fn get_visited_positions(
     let guard_position_iter = GuardPositionIterator {
         grid: grid.clone(),
         position: Some(start),
-        direction: Vector2 { x: 0, y: 1 },
+        direction: Vector2 { x: 0, y: -1 },
     };
 
     let mut seen = HashSet::from([start]);
