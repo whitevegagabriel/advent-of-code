@@ -122,7 +122,7 @@ impl<T: Copy + Neg<Output = T> + Integer> Vector2<T> {
             }
         }
     }
-    
+
     pub fn rotated_90(&self, rotation_direction: RotationDirection) -> Self {
         let mut new_self = *self;
         new_self.rotate_90(rotation_direction);
@@ -286,7 +286,9 @@ pub fn visualize_points<'a, T: Copy + TryInto<usize> + 'a, P: AsPoint2<'a, T>>(
     canvas.iter().map(|chars| chars.iter().join("")).join("\n")
 }
 
-pub fn visualize<T: Num + Copy + Ord + TryInto<usize>>(points: &HashMap<Point2<T>, char>) -> String {
+pub fn visualize<T: Num + Copy + Ord + TryInto<usize>>(
+    points: &HashMap<Point2<T>, char>,
+) -> String {
     let x_points = points.keys().map(|point| point.x).collect_vec();
     let min_x = (*x_points.iter().min().unwrap()).try_into().ok().unwrap();
     let max_x = (*x_points.iter().max().unwrap()).try_into().ok().unwrap();
@@ -294,12 +296,12 @@ pub fn visualize<T: Num + Copy + Ord + TryInto<usize>>(points: &HashMap<Point2<T
     let y_points = points.keys().map(|point| point.y).collect_vec();
     let min_y = (*y_points.iter().min().unwrap()).try_into().ok().unwrap();
     let max_y = (*y_points.iter().max().unwrap()).try_into().ok().unwrap();
-    
+
     let width = max_x - min_x + 1;
     let height = max_y - min_y + 1;
-    
+
     let mut canvas = vec![vec![' '; width]; height];
-    
+
     for (point, c) in points {
         let y_idx = point.y.try_into().ok().unwrap() - min_x;
         let x_idx = point.x.try_into().ok().unwrap() - min_y;

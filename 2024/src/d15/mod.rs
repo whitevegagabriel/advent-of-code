@@ -1,7 +1,10 @@
-use crate::common::{parse_to_char_map, test, Point2, Vector2};
+use crate::common::{
+    parse_to_char_map, test, Point2,
+    RotationDirection::{Clockwise, Counterclockwise},
+    Vector2,
+};
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet};
-use crate::common::RotationDirection::{Clockwise, Counterclockwise};
 
 const MODULE: &str = module_path!();
 
@@ -72,13 +75,19 @@ fn p2(input: &str) -> usize {
     for direction_vector in direction_vectors {
         let mut potential_grid = grid.clone();
         let mut moved = HashSet::new();
-        let moved_all = recursive_move_all(curr, direction_vector, false, &mut potential_grid, &mut moved);
+        let moved_all = recursive_move_all(
+            curr,
+            direction_vector,
+            false,
+            &mut potential_grid,
+            &mut moved,
+        );
         if moved_all {
             curr += direction_vector;
-            grid = potential_grid;  
+            grid = potential_grid;
         }
     }
-    
+
     grid.iter()
         .filter_map(|(k, v)| {
             if v == &'[' {
@@ -90,36 +99,48 @@ fn p2(input: &str) -> usize {
         .sum()
 }
 
-fn recursive_move_all(curr: Point2<isize>, direction_vector: Vector2<isize>, allow_perpendicular_checking: bool, grid: &mut HashMap<Point2<isize>, char>, moved: &mut HashSet<Point2<isize>>) -> bool {
+fn recursive_move_all(
+    curr: Point2<isize>,
+    direction_vector: Vector2<isize>,
+    allow_perpendicular_checking: bool,
+    grid: &mut HashMap<Point2<isize>, char>,
+    moved: &mut HashSet<Point2<isize>>,
+) -> bool {
     if moved.contains(&curr) {
         return true;
     }
-    
+
     if grid[&curr] == '#' {
         return false;
     }
-    
+
     if grid[&curr] == '.' {
         return true;
     }
-    
+
     if !recursive_move_all(curr + direction_vector, direction_vector, true, grid, moved) {
         return false;
     }
-    
+
     if !allow_perpendicular_checking || direction_vector.y == 0 {
         grid.insert(curr + direction_vector, grid[&curr]);
         grid.insert(curr, '.');
         moved.insert(curr);
         return true;
     }
-    
+
     let (left_dir, right_dir) = if direction_vector.y == -1 {
-        (direction_vector.rotated_90(Counterclockwise), direction_vector.rotated_90(Clockwise))
+        (
+            direction_vector.rotated_90(Counterclockwise),
+            direction_vector.rotated_90(Clockwise),
+        )
     } else {
-        (direction_vector.rotated_90(Clockwise), direction_vector.rotated_90(Counterclockwise))
+        (
+            direction_vector.rotated_90(Clockwise),
+            direction_vector.rotated_90(Counterclockwise),
+        )
     };
-    
+
     let left = curr + left_dir;
     let right = curr + right_dir;
 
@@ -130,13 +151,13 @@ fn recursive_move_all(curr: Point2<isize>, direction_vector: Vector2<isize>, all
     };
 
     let moved_all = recursive_move_all(new_curr, direction_vector, false, grid, moved);
-    
+
     if moved_all {
         grid.insert(curr + direction_vector, grid[&curr]);
         grid.insert(curr, '.');
         moved.insert(curr);
     }
-    
+
     moved_all
 }
 
