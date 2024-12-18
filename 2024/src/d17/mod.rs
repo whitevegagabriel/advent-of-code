@@ -31,11 +31,7 @@ fn p1(input: &str) -> String {
         computer.execute(instruction);
     }
 
-    computer
-        .output
-        .iter()
-        .map(|v| v.to_string())
-        .join(",")
+    computer.output.iter().map(|v| v.to_string()).join(",")
 }
 
 fn p2(input: &str) -> usize {
@@ -48,31 +44,31 @@ fn p2(input: &str) -> usize {
         if try_for_register_a % 10000000 == 0 {
             dbg!(try_for_register_a);
         }
-        
+
         computer.register_a = try_for_register_a;
         computer.register_b = original_register_b;
         computer.register_c = original_register_c;
         computer.output = vec![];
         computer.instruction_pointer = 0;
-        
+
         let mut output_pointer = 0;
 
         while let Some(instruction) = instructions.get(computer.instruction_pointer) {
             computer.execute(instruction);
-            
+
             if let Instruction::Out(_) = instruction {
                 if computer.output[output_pointer] != raw_instructions[output_pointer] {
                     break;
                 }
-                
+
                 if computer.output == raw_instructions {
                     break 'outer try_for_register_a;
                 }
-                
+
                 output_pointer += 1;
             }
         }
-        
+
         try_for_register_a += 1;
     }
 }
@@ -95,7 +91,8 @@ Program: (.+)",
         .split(',')
         .map(|s| s.parse::<usize>().unwrap())
         .collect_vec();
-    let instructions = raw_instructions.iter()
+    let instructions = raw_instructions
+        .iter()
         .tuples()
         .map(|(instruction_code, operand_code)| Instruction::new(*instruction_code, *operand_code))
         .collect();
