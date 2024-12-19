@@ -21,7 +21,7 @@ fn p2_example() {
 
 #[test]
 fn p2_input() {
-    test("input", MODULE, p2, 0);
+    test("input", MODULE, p2, 236548287712877);
 }
 
 fn p1(input: &str) -> String {
@@ -35,42 +35,50 @@ fn p1(input: &str) -> String {
 }
 
 fn p2(input: &str) -> usize {
-    let (mut computer, instructions, raw_instructions) = parse_input(input);
+    let (computer, instructions, raw_instructions) = parse_input(input);
+    let raw_instructions_rev = raw_instructions.into_iter().rev().collect_vec();
 
-    let mut try_for_register_a = 605740000000;
-    let original_register_b = computer.register_b;
-    let original_register_c = computer.register_c;
-    'outer: loop {
-        if try_for_register_a % 10000000 == 0 {
-            dbg!(try_for_register_a);
-        }
+    value_for_register_a_that_outputs_self_instruction(
+        0,
+        &raw_instructions_rev,
+        &instructions,
+        &computer,
+    )
+    .unwrap()
+}
 
-        computer.register_a = try_for_register_a;
-        computer.register_b = original_register_b;
-        computer.register_c = original_register_c;
-        computer.output = vec![];
-        computer.instruction_pointer = 0;
-
-        let mut output_pointer = 0;
-
+fn value_for_register_a_that_outputs_self_instruction(
+    prev_a_register: usize,
+    raw_instructions: &[usize],
+    instructions: &[Instruction],
+    original_computer: &Computer,
+) -> Option<usize> {
+    let Some(target_output) = raw_instructions.first() else {
+        return Some(prev_a_register);
+    };
+    let curr_a_register_shifted_3_bits = prev_a_register * 8;
+    for lower_3_bits in 0_usize..8 {
+        let mut computer = original_computer.clone();
+        computer.register_a = curr_a_register_shifted_3_bits + lower_3_bits;
         while let Some(instruction) = instructions.get(computer.instruction_pointer) {
             computer.execute(instruction);
-
-            if let Instruction::Out(_) = instruction {
-                if computer.output[output_pointer] != raw_instructions[output_pointer] {
-                    break;
-                }
-
-                if computer.output == raw_instructions {
-                    break 'outer try_for_register_a;
-                }
-
-                output_pointer += 1;
+            if !computer.output.is_empty() {
+                break;
             }
         }
-
-        try_for_register_a += 1;
+        if &computer.output[0] == target_output {
+            let maybe_register_a = value_for_register_a_that_outputs_self_instruction(
+                curr_a_register_shifted_3_bits + lower_3_bits,
+                &raw_instructions[1..],
+                instructions,
+                original_computer,
+            );
+            if maybe_register_a.is_some() {
+                return maybe_register_a;
+            }
+        }
     }
+    None
 }
 
 fn parse_input(input: &str) -> (Computer, Vec<Instruction>, Vec<usize>) {
@@ -110,7 +118,7 @@ Program: (.+)",
     )
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Computer {
     register_a: usize,
     register_b: usize,
