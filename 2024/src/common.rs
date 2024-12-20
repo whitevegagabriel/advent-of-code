@@ -310,3 +310,19 @@ pub fn visualize<T: Num + Copy + Ord + TryInto<usize>>(
 
     canvas.iter().map(|chars| chars.iter().join("")).join("\n")
 }
+
+pub fn manhattan_dist<T: Num + Ord + Copy>(p1: &Point2<T>, p2: &Point2<T>) -> T {
+    let dist_x = if p1.x > p2.x {
+        p1.x - p2.x
+    } else {
+        p2.x - p1.x
+    };
+
+    let dist_y = if p1.y > p2.y {
+        p1.y - p2.y
+    } else {
+        p2.y - p1.y
+    };
+
+    dist_x + dist_y
+}

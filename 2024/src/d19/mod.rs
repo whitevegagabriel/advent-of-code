@@ -1,8 +1,6 @@
-use std::collections::{HashMap, HashSet};
-
-use itertools::Itertools;
-
 use crate::common::test;
+use itertools::Itertools;
+use std::collections::{HashMap, HashSet};
 
 const MODULE: &str = module_path!();
 
@@ -31,9 +29,10 @@ fn p1(input: &str) -> usize {
 
     let mut cache = HashMap::new();
 
-    required_patterns.iter().filter(|pattern| {
-        num_ways_pattern_can_be_made(pattern, &towels, &mut cache) > 0
-    }).count() 
+    required_patterns
+        .iter()
+        .filter(|pattern| num_ways_pattern_can_be_made(pattern, &towels, &mut cache) > 0)
+        .count()
 }
 
 fn p2(input: &str) -> usize {
@@ -41,12 +40,17 @@ fn p2(input: &str) -> usize {
 
     let mut cache = HashMap::new();
 
-    required_patterns.iter().map(|pattern| {
-        num_ways_pattern_can_be_made(pattern, &towels, &mut cache)
-    }).sum()
+    required_patterns
+        .iter()
+        .map(|pattern| num_ways_pattern_can_be_made(pattern, &towels, &mut cache))
+        .sum()
 }
 
-fn num_ways_pattern_can_be_made<'b, 'a: 'b>(pattern: &'a str, towels: &HashSet<&str>, cache: &'b mut HashMap<&'a str, usize>) -> usize {
+fn num_ways_pattern_can_be_made<'b, 'a: 'b>(
+    pattern: &'a str,
+    towels: &HashSet<&str>,
+    cache: &'b mut HashMap<&'a str, usize>,
+) -> usize {
     if let Some(num_ways) = cache.get(pattern) {
         return *num_ways;
     }
@@ -55,15 +59,17 @@ fn num_ways_pattern_can_be_made<'b, 'a: 'b>(pattern: &'a str, towels: &HashSet<&
         return 1;
     }
 
-    let num_ways = (1..=pattern.len()).map(|split_idx| {
-        let left = &pattern[0..split_idx];
-        let right = &pattern[split_idx..];
-        if towels.contains(left) {
-            num_ways_pattern_can_be_made(right, towels, cache)
-        } else {
-            0
-        }
-    }).sum::<usize>();
+    let num_ways = (1..=pattern.len())
+        .map(|split_idx| {
+            let left = &pattern[0..split_idx];
+            let right = &pattern[split_idx..];
+            if towels.contains(left) {
+                num_ways_pattern_can_be_made(right, towels, cache)
+            } else {
+                0
+            }
+        })
+        .sum::<usize>();
 
     cache.insert(pattern, num_ways);
 
