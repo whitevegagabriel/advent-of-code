@@ -55,7 +55,7 @@ fn num_ways_pattern_can_be_made<'b, 'a: 'b>(
         return *num_ways;
     }
 
-    if pattern == "" {
+    if pattern.is_empty() {
         return 1;
     }
 

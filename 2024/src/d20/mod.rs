@@ -1,6 +1,5 @@
 use crate::common::{
-    get_cross_neighbors, manhattan_dist, parse_to_char_map,
-    test_with_params, Point2,
+    get_cross_neighbors, manhattan_dist, parse_to_char_map, test_with_params, Point2,
 };
 use itertools::Itertools;
 use pathfinding::prelude::dijkstra_all;
@@ -44,7 +43,13 @@ fn p2(input: &str, time_to_save: usize) -> usize {
     qty_shortcuts_saving_at_least(time_to_save, 20, &start, &end, &grid)
 }
 
-fn qty_shortcuts_saving_at_least(time_to_save: usize, shortcut_len: usize, start: &Point2<isize>, end: &Point2<isize>, grid: &Grid) -> usize {
+fn qty_shortcuts_saving_at_least(
+    time_to_save: usize,
+    shortcut_len: usize,
+    start: &Point2<isize>,
+    end: &Point2<isize>,
+    grid: &Grid,
+) -> usize {
     let mut reachable_from_start = dijkstra_all(start, |curr| get_neighbors(curr, grid));
     reachable_from_start.insert(*start, (*start, 0));
 
