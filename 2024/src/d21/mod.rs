@@ -53,7 +53,7 @@ fn len_shortest_seq<'b, 'a: 'b>(
     if layer == 0 {
         return buttons.len();
     }
-    
+
     let key = (buttons, layer);
     if let Some(value) = cache.get(&key) {
         return *value;
@@ -105,7 +105,7 @@ fn generate_shortest_path_entry(
     .iter()
     .flatten()
     .collect::<String>();
-    
+
     let horz_then_vert = [
         vec![horz_dir; horz_dist],
         vec![vert_dir; vert_dist],

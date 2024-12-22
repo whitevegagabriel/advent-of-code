@@ -47,6 +47,8 @@ mod d20;
 mod d21;
 #[cfg(test)]
 mod d22;
+#[cfg(test)]
+mod d23;
 
 fn main() {
     println!("Advent of Code 2024");
