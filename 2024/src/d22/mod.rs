@@ -50,11 +50,7 @@ fn p2(input: &str) -> usize {
                 .map(|(p1, p2, p3, p4, p5)| ((p2 - p1, p3 - p2, p4 - p3, p5 - p4), p5))
                 .take(2000) // take 2000 price changes, not 2000 prices
                 .filter(|((c1, c2, c3, c4), _)| {
-                    c1 + c2 + c3 + c4 >= 2
-                        && c1 >= &-2
-                        && c2 >= &-2
-                        && c3 >= &-2
-                        && c4 >= &-2
+                    c1 + c2 + c3 + c4 >= 2 && c1 >= &-2 && c2 >= &-2 && c3 >= &-2 && c4 >= &-2
                 })
                 .collect_vec();
 
@@ -65,23 +61,18 @@ fn p2(input: &str) -> usize {
         })
         .collect_vec();
 
-    let mut revenue_map = HashMap::new();
-    for pattern_to_first_price_map in &pattern_to_first_price_maps {
-        for pattern in pattern_to_first_price_map.keys() {
-            if revenue_map.contains_key(pattern) {
-                continue;
+    *pattern_to_first_price_maps
+        .iter()
+        .fold(HashMap::new(), |mut acc, curr| {
+            for (key, value) in curr {
+                *acc.entry(key).or_insert(0) += *value;
             }
-            
-            let revenue = pattern_to_first_price_maps
-                .iter()
-                .filter_map(|m| m.get(pattern))
-                .sum::<isize>();
 
-            revenue_map.insert(*pattern, revenue);
-        }
-    }
-
-    *revenue_map.values().max().unwrap() as usize
+            acc
+        })
+        .values()
+        .max()
+        .unwrap() as usize
 }
 
 struct PseudoRng {
