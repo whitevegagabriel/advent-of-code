@@ -124,21 +124,6 @@ fn parse_input(input: &str) -> (HashMap<&str, usize>, Graph, HashMap<&str, Logic
     (initializer, graph, gate_map)
 }
 
-fn compact(prefix: &str, outputs: &HashMap<&str, usize>) -> usize {
-    let mut ans = 0;
-    let mut mult = 1_usize;
-    for i in 0.. {
-        let key = format!("{prefix}{i:02}");
-        let Some(value) = outputs.get(key.as_str()) else {
-            break;
-        };
-
-        ans += value * mult;
-        mult *= 2;
-    }
-    ans
-}
-
 fn trigger_switch<'b, 'a: 'b>(
     source: &'a str,
     value: usize,
