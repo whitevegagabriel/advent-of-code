@@ -1,6 +1,6 @@
 use crate::common::Direction::{Down, Left, Right, Up};
 use itertools::Itertools;
-use num::{integer::gcd, Integer};
+use num::{Integer, integer::gcd};
 use num_traits::Num;
 use std::{
     cmp::Eq,
