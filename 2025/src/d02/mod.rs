@@ -20,7 +20,7 @@ fn p2_example() {
 
 #[test]
 fn p2_input() {
-    test("input", MODULE, p2, 0);
+    test("input", MODULE, p2, 69553832684);
 }
 
 fn p1(input: &str) -> usize {
@@ -33,16 +33,23 @@ fn p1(input: &str) -> usize {
 
 fn p2(input: &str) -> usize {
     solve(input, |candidate| {
-        let candidate_string = candidate.to_string();
-        // try all possible valid pattern lengths. short-circuit on the first pattern to succeed
-        (1..=candidate_string.len() / 2).rev().any(|chunk_size| {
-            candidate_string
-                .chars()
-                .chunks(chunk_size)
-                .into_iter()
-                .map(|chunk| chunk.collect_vec())
-                .all_equal()
-        })
+        let candidate_bytes = candidate.to_string().bytes().collect_vec();
+        let candidate_len = candidate_bytes.len();
+
+        if candidate_len == 1 {
+            return false;
+        }
+
+        // try all possible valid pattern lengths. short-circuit on the first pattern to succeed.
+        // candidates are not longer than 10 digits.
+        [2, 3, 5, candidate_len]
+            .iter()
+            .filter(|num_chunks| candidate_len.is_multiple_of(**num_chunks))
+            .any(|num_chunks| {
+                let chunk_size = candidate_len / num_chunks;
+                candidate_bytes.chunks(chunk_size).all_equal()
+            })
+            || candidate_len > 1 && candidate_bytes.iter().all_equal()
     })
 }
 
