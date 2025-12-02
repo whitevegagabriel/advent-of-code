@@ -20,7 +20,7 @@ fn p2_example() {
 
 #[test]
 fn p2_input() {
-    test("input", MODULE, p2, 0);
+    test("input", MODULE, p2, 6558);
 }
 
 fn p1(input: &str) -> usize {
@@ -48,18 +48,15 @@ fn p2(input: &str) -> usize {
         zeroes += rotation.unsigned_abs() / 100;
         let rotation_mod = rotation % 100;
         let before = current;
-        current += rotation_mod;
-        if before < 100 && current > 100
-            || before > 0 && current < 0
-            || before != 0 && current == 0
-            || before != 100 && current == 100
+        let after = current + rotation_mod;
+        if before < 100 && after > 100
+            || before > 0 && after < 0
+            || before != 0 && after == 0
+            || before != 100 && after == 100
         {
             zeroes += 1;
         }
-        current %= 100;
-        if current < 0 {
-            current += 100;
-        }
+        current = after.rem_euclid(100);
     }
 
     zeroes
