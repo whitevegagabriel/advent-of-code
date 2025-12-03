@@ -1,15 +1,17 @@
+use itertools::Itertools;
+
 use crate::common::test;
 
 const MODULE: &str = module_path!();
 
 #[test]
 fn p1_example() {
-    test("example", MODULE, p1, 0);
+    test("example", MODULE, p1, 357);
 }
 
 #[test]
 fn p1_input() {
-    test("input", MODULE, p1, 0);
+    test("input", MODULE, p1, 17554);
 }
 
 #[test]
@@ -23,7 +25,13 @@ fn p2_input() {
 }
 
 fn p1(input: &str) -> usize {
-    0
+    input
+        .lines()
+        .map(|line| {
+            let (max1, max2) = line.chars().tuple_combinations::<(_, _)>().max().unwrap();
+            format!("{max1}{max2}").parse::<usize>().unwrap()
+        })
+        .sum()
 }
 
 fn p2(input: &str) -> usize {
