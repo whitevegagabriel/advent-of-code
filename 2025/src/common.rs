@@ -50,7 +50,7 @@ pub fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
     println!("Elapsed: {time} {units}");
 }
 
-#[derive(Copy, Clone, Hash, Eq, PartialEq, Debug)]
+#[derive(Copy, Clone, Hash, Eq, PartialEq, Debug, Ord, PartialOrd)]
 pub struct Point2<T> {
     pub(crate) x: T,
     pub(crate) y: T,
@@ -258,6 +258,48 @@ pub fn get_cross_neighbors_with_direction<T: Integer + Neg<Output = T> + Copy>(
 
 pub fn count_digits(num: usize) -> usize {
     (num.checked_ilog10().unwrap_or(0) + 1) as usize
+}
+
+pub fn get_square_neighbors<T: Integer + Neg<Output = T> + Copy>(
+    curr: Point2<T>,
+) -> Vec<Point2<T>> {
+    [
+        Vector2 {
+            x: -T::one(),
+            y: T::zero(),
+        },
+        Vector2 {
+            x: -T::one(),
+            y: -T::one(),
+        },
+        Vector2 {
+            x: T::one(),
+            y: T::zero(),
+        },
+        Vector2 {
+            x: T::one(),
+            y: T::one(),
+        },
+        Vector2 {
+            x: T::zero(),
+            y: -T::one(),
+        },
+        Vector2 {
+            x: T::one(),
+            y: -T::one(),
+        },
+        Vector2 {
+            x: T::zero(),
+            y: T::one(),
+        },
+        Vector2 {
+            x: -T::one(),
+            y: T::one(),
+        },
+    ]
+    .iter()
+    .map(|dir| curr + *dir)
+    .collect()
 }
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]

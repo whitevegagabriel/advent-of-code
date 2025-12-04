@@ -1,6 +1,5 @@
-use itertools::Itertools;
-
 use crate::common::test;
+use itertools::Itertools;
 
 const MODULE: &str = module_path!();
 
