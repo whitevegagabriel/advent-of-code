@@ -52,39 +52,41 @@ fn p1(input: &str) -> usize {
 
 fn p2(input: &str) -> usize {
     let input_lines = input.lines().collect_vec();
-    let nums = 
-    transpose(
-        &input_lines[0..input_lines.len() - 1]
+
+    /*
+     * 123_328    1__
+     * _45_64_ => 24_
+     * __6_98_    356
+     *            ___
+     *            369
+     *            248
+     *            8__
+     */
+    let char_matrix = transpose(
+        &input_lines
             .iter()
+            .take(input_lines.len() - 1)
             .map(|line| line.chars().collect_vec())
             .collect_vec(),
-    )
-    .into_iter()
-    .map(|vec| {
-        vec.iter().filter(|c| !c.is_whitespace()).join("")
-    })
-    .chain(["".to_string()])
-    .collect_vec();
-    
-    let mut result = 0;
-    let mut intermediate = 0;
-    let mut num_idx = 0;
-    for op in input_lines.last().unwrap().split_whitespace() {
-        while !nums[num_idx].is_empty() {
-            let num = nums[num_idx].parse::<usize>().unwrap();
-            if intermediate == 0 {
-                intermediate = num;
-            } else if op == "+" {
-                intermediate += num;
-            } else {
-                intermediate *= num;
-            }
-            num_idx += 1
-        }
-        num_idx += 1;
-        result += intermediate;
-        intermediate = 0;
-    }
+    );
+    let operations = input_lines.last().unwrap().split_whitespace().collect_vec();
 
-    result
+    let all_nums = char_matrix
+        .iter()
+        .map(|vec| vec.iter().collect::<String>().trim().parse::<usize>().ok())
+        .collect_vec();
+
+    all_nums
+        // operations are separated by empty rows. these end up becoming "unparsed" nums that we can split on.
+        .split(|num| num.is_none())
+        .map(|nums| nums.iter().filter_map(|&num| num))
+        .zip(operations)
+        .map(|(nums, op)| {
+            if op == "+" {
+                nums.sum::<usize>()
+            } else {
+                nums.product()
+            }
+        })
+        .sum()
 }
