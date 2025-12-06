@@ -368,3 +368,18 @@ pub fn manhattan_dist<T: Num + Ord + Copy>(p1: &Point2<T>, p2: &Point2<T>) -> T 
 
     dist_x + dist_y
 }
+
+pub fn transpose<T: Clone>(input: &[Vec<T>]) -> Vec<Vec<T>> {
+    if input.is_empty() {
+        return vec![];
+    }
+    let height = input.len();
+    let width = input[0].len();
+    let mut result = vec![vec![]; width];
+
+    for (row, col) in (0..height).cartesian_product(0..width) {
+        result[col].push(input[row][col].clone());
+    }
+
+    result
+}
