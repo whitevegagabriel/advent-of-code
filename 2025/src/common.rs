@@ -4,7 +4,7 @@ use num::{Integer, integer::gcd};
 use num_traits::Num;
 use std::{
     cmp::Eq,
-    collections::HashMap,
+    collections::{HashMap, HashSet},
     env,
     fmt::Debug,
     fs::read_to_string,
@@ -12,6 +12,9 @@ use std::{
     ops::{Add, AddAssign, Mul, Neg, Sub, SubAssign},
     time,
 };
+
+pub const DOWN_USIZE: Vector2<usize> = Vector2::<usize> { x: 0, y: 1 };
+pub const RIGHT_USIZE: Vector2<usize> = Vector2::<usize> { x: 1, y: 0 };
 
 pub fn test<T: Debug + Eq, F: Fn(&str) -> T>(
     file_name: &str,
@@ -163,24 +166,39 @@ pub enum RotationDirection {
 }
 
 pub fn parse_to_usize_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point2<T>, usize> {
-    parse_to_map(input, |c| c as usize - '0' as usize)
+    parse_to_map_and_maybe_find(input, |c| c as usize - '0' as usize, None).0
 }
 
 pub fn parse_to_char_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point2<T>, char> {
-    parse_to_map(input, |c| c)
+    parse_to_map_and_maybe_find(input, |c| c, None).0
 }
 
-fn parse_to_map<T: TryFrom<usize> + Eq + Hash, V, F: Fn(char) -> V>(
+pub fn parse_to_char_map_and_find<T: TryFrom<usize> + Eq + Hash>(
+    input: &str,
+    find: char,
+) -> (HashMap<Point2<T>, char>, Option<Point2<T>>) {
+    parse_to_map_and_maybe_find(input, |c| c, Some(find))
+}
+
+fn parse_to_map_and_maybe_find<T: TryFrom<usize> + Eq + Hash, V, F: Fn(char) -> V>(
     input: &str,
     mapper: F,
-) -> HashMap<Point2<T>, V> {
-    input
+    find: Option<char>,
+) -> (HashMap<Point2<T>, V>, Option<Point2<T>>) {
+    let mut found = None;
+    let map = input
         .lines()
         .enumerate()
         .flat_map(|(line_idx, line)| {
             line.chars()
                 .enumerate()
                 .map(|(c_idx, c)| {
+                    if Some(c) == find {
+                        found = Some(Point2 {
+                            x: c_idx.try_into().ok().unwrap(),
+                            y: line_idx.try_into().ok().unwrap(),
+                        });
+                    }
                     (
                         Point2 {
                             x: c_idx.try_into().ok().unwrap(),
@@ -191,7 +209,40 @@ fn parse_to_map<T: TryFrom<usize> + Eq + Hash, V, F: Fn(char) -> V>(
                 })
                 .collect_vec()
         })
-        .collect()
+        .collect();
+    (map, found)
+}
+
+pub fn parse_to_set_and_find<T: TryFrom<usize> + Eq + Hash>(
+    input: &str,
+    char_in_set: &char,
+    find: char,
+) -> (HashSet<Point2<T>>, Point2<T>) {
+    let mut found = None;
+    let set = input
+        .lines()
+        .enumerate()
+        .flat_map(|(line_idx, line)| {
+            line.chars()
+                .enumerate()
+                .filter_map(|(c_idx, c)| {
+                    let point = Point2 {
+                        x: c_idx.try_into().ok().unwrap(),
+                        y: line_idx.try_into().ok().unwrap(),
+                    };
+                    if &c == char_in_set {
+                        Some(point)
+                    } else {
+                        if c == find {
+                            found = Some(point);
+                        }
+                        None
+                    }
+                })
+                .collect_vec()
+        })
+        .collect();
+    (set, found.expect("shouldhave found target char in input"))
 }
 
 pub fn get_cross_neighbors<T: Integer + Neg<Output = T> + Copy>(curr: Point2<T>) -> Vec<Point2<T>> {
