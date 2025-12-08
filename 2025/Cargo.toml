@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 average = "0.16.0"
+disjoint = "0.8.0"
 itertools = "0.14.0"
 num = "0.4.3"
 num-traits = "0.2.19"
