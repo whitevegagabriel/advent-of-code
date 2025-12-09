@@ -27,13 +27,11 @@ fn p2_input() {
 fn p1(input: &str, k_closest: usize) -> usize {
     let num_coords = input.lines().count();
     let mut disjoint_set = DisjointSet::with_len(num_coords);
-    let mut num_processed = 0;
-    for (i1, _, i2, _) in parse_combinations_sorted_by_distance(input) {
+    for (i1, _, i2, _) in parse_combinations_sorted_by_distance(input)
+        .into_iter()
+        .take(k_closest)
+    {
         disjoint_set.join(i1, i2);
-        num_processed += 1;
-        if num_processed == k_closest {
-            break;
-        }
     }
     disjoint_set
         .sets()
