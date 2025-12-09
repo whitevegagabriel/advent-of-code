@@ -1,5 +1,5 @@
 use crate::common::Direction::{Down, Left, Right, Up};
-use itertools::Itertools;
+use itertools::{Itertools, traits};
 use num::{Integer, integer::gcd};
 use num_traits::Num;
 use std::{
@@ -10,6 +10,7 @@ use std::{
     fs::read_to_string,
     hash::Hash,
     ops::{Add, AddAssign, Mul, Neg, Sub, SubAssign},
+    str::pattern::Pattern,
     time,
 };
 
@@ -433,4 +434,23 @@ pub fn transpose<T: Clone>(input: &[Vec<T>]) -> Vec<Vec<T>> {
     }
 
     result
+}
+
+pub fn parse_lines_to_tuples<T: traits::HomogeneousTuple<Item = I>, I>(
+    input: &str,
+    pat: char,
+    parser: fn(&str) -> I,
+) -> Vec<T> {
+    input
+        .lines()
+        .map(|line| parse_and_split_to_tuple(line, pat, parser))
+        .collect_vec()
+}
+
+pub fn parse_and_split_to_tuple<T: traits::HomogeneousTuple<Item = I>, P: Pattern, I>(
+    line: &str,
+    pat: P,
+    parser: fn(&str) -> I,
+) -> T {
+    line.split(pat).map(parser).collect_tuple::<T>().unwrap()
 }

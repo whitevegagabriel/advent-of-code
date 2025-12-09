@@ -1,4 +1,4 @@
-use crate::common::test;
+use crate::common::{parse_lines_to_tuples, test};
 use itertools::Itertools;
 
 const MODULE: &str = module_path!();
@@ -24,14 +24,8 @@ fn p2_input() {
 }
 
 fn p1(input: &str) -> usize {
-    input
-        .lines()
-        .map(|line| {
-            line.split(',')
-                .map(|num_str| num_str.parse::<usize>().unwrap())
-                .collect_tuple::<(_, _)>()
-                .unwrap()
-        })
+    parse_lines_to_tuples(input, ',', |s| s.parse::<usize>().unwrap())
+        .into_iter()
         .tuple_combinations()
         .map(|((x1, y1), (x2, y2))| (x1.abs_diff(x2) + 1) * (y1.abs_diff(y2) + 1))
         .max()

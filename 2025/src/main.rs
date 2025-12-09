@@ -1,4 +1,5 @@
 #![allow(unused_variables)]
+#![feature(pattern)]
 
 pub mod common;
 #[cfg(test)]
