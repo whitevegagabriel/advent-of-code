@@ -12,3 +12,4 @@ num-traits = "0.2.19"
 pathfinding = "4.12.0"
 rayon = "1.10.0"
 regex = "1.11.1"
+z3 = { version = "0.19.6", features = ["gh-release"] }

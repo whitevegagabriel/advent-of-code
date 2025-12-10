@@ -1,6 +1,7 @@
 #![allow(unused_variables)]
 #![feature(pattern)]
 #![feature(binary_heap_into_iter_sorted)]
+#![feature(strip_circumfix)]
 
 pub mod common;
 #[cfg(test)]
