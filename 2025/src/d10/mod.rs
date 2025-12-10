@@ -1,6 +1,6 @@
 use crate::common::test;
 use itertools::Itertools;
-use z3::{Solver, ast::Int};
+use microlp::{ComparisonOp, OptimizationDirection, Problem};
 
 const MODULE: &str = module_path!();
 
@@ -58,12 +58,12 @@ fn p2(input: &str) -> usize {
         .map(|line| {
             let mut items = line.split_whitespace().rev();
             let joltage_str = items.next().unwrap();
-            let mut joltage = [0_i32; 10];
+            let mut joltage = [0_f64; 10];
             for (i, val) in joltage_str
                 .strip_circumfix('{', '}')
                 .unwrap()
                 .split(',')
-                .map(|num| num.parse::<i32>().unwrap())
+                .map(|num| num.parse::<f64>().unwrap())
                 .enumerate()
             {
                 joltage[i] = val;
@@ -72,15 +72,15 @@ fn p2(input: &str) -> usize {
             let buttons = items
                 .filter_map(|item| item.strip_circumfix('(', ')'))
                 .map(|item| {
-                    let mut button = [0_i32; 10];
+                    let mut button = [0_f64; 10];
                     for i in item.split(',').map(|num| num.parse::<usize>().unwrap()) {
-                        button[i] = 1;
+                        button[i] = 1.0;
                     }
                     button
                 })
                 .collect_vec();
 
-            fewest_presses_z3(joltage, &buttons)
+            fewest_presses_microlp(joltage, &buttons)
         })
         .sum()
 }
@@ -100,30 +100,21 @@ fn fewest_presses_xor(indicators_bitmask: u16, toggle_bitmasks: &[u16]) -> Optio
         .min()
 }
 
-fn fewest_presses_z3(joltage: [i32; 10], buttons: &[[i32; 10]]) -> usize {
-    let solver = Solver::new();
-    let int_consts = (0..buttons.len())
-        .map(|_| Int::fresh_const(""))
+fn fewest_presses_microlp(joltage: [f64; 10], buttons: &[[f64; 10]]) -> usize {
+    let mut problem = Problem::new(OptimizationDirection::Minimize);
+
+    let vars = (0..buttons.len())
+        .map(|_| problem.add_integer_var(1., (0, i32::MAX)))
         .collect_vec();
 
-    for int_const in &int_consts {
-        solver.assert(int_const.ge(0))
-    }
-
     for i in 0..10 {
-        solver.assert(
-            buttons
-                .iter()
-                .zip(int_consts.iter())
-                .map(|(button, int_const)| button[i] * int_const)
-                .sum::<Int>()
-                .eq(joltage[i]),
-        );
+        let expr = buttons
+            .iter()
+            .zip(vars.iter())
+            .map(|(button, var)| (*var, button[i]))
+            .collect_vec();
+        problem.add_constraint(expr, ComparisonOp::Eq, joltage[i]);
     }
 
-    solver
-        .solutions(int_consts, false)
-        .map(|weights| weights.iter().map(|i| i.as_u64().unwrap()).sum::<u64>() as usize)
-        .min()
-        .unwrap()
+    problem.solve().unwrap().objective().round() as usize
 }
