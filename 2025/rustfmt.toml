@@ -1,3 +1,4 @@
 edition = "2024"
 group_imports = "One"
 imports_granularity = "Crate"
+max_width = 80

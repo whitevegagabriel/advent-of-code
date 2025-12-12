@@ -24,7 +24,8 @@ fn p2_input() {
 }
 
 fn p1(input: &str) -> usize {
-    let (ranges_str, ingredients_str) = input.split("\n\n").collect_tuple().unwrap();
+    let (ranges_str, ingredients_str) =
+        input.split("\n\n").collect_tuple().unwrap();
     let ranges = ranges_str
         .lines()
         .map(|line| {

@@ -59,7 +59,9 @@ fn p2(input: &str) -> usize {
     removed
 }
 
-fn removable_points(rolls: &HashMap<Point2<isize>, char>) -> Vec<Point2<isize>> {
+fn removable_points(
+    rolls: &HashMap<Point2<isize>, char>,
+) -> Vec<Point2<isize>> {
     rolls
         .keys()
         .cloned()

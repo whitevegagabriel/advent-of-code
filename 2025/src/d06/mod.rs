@@ -35,7 +35,8 @@ fn p1(input: &str) -> usize {
             })
             .collect_vec(),
     );
-    let operations = input_lines.last().unwrap().split_whitespace().collect_vec();
+    let operations =
+        input_lines.last().unwrap().split_whitespace().collect_vec();
 
     vec_of_nums
         .iter()
@@ -69,7 +70,8 @@ fn p2(input: &str) -> usize {
             .map(|line| line.chars().collect_vec())
             .collect_vec(),
     );
-    let operations = input_lines.last().unwrap().split_whitespace().collect_vec();
+    let operations =
+        input_lines.last().unwrap().split_whitespace().collect_vec();
 
     let all_nums = char_matrix
         .iter()

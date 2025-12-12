@@ -67,8 +67,10 @@ fn p2(input: &str) -> usize {
         })
         .unwrap();
 
-    let paths_to_first = count_all_paths(&device_map, &String::from("svr"), first);
-    let paths_from_second = count_all_paths(&device_map, second, &String::from("out"));
+    let paths_to_first =
+        count_all_paths(&device_map, &String::from("svr"), first);
+    let paths_from_second =
+        count_all_paths(&device_map, second, &String::from("out"));
 
     paths_to_first * paths_dac_fft * paths_from_second
 }
@@ -91,9 +93,11 @@ fn count_all_paths<T: Eq + Hash + Debug>(
         // is None if any dependencies have not been computed yet
         let maybe_paths = match maybe_next_devices {
             None => Some(0),
-            Some(next_devices) => next_devices.iter().try_fold(0, |acc, next_device| {
-                cache.get(next_device).map(|inner| inner + acc)
-            }),
+            Some(next_devices) => {
+                next_devices.iter().try_fold(0, |acc, next_device| {
+                    cache.get(next_device).map(|inner| inner + acc)
+                })
+            }
         };
 
         if let Some(paths) = maybe_paths {

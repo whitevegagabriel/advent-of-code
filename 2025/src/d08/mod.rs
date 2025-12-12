@@ -46,7 +46,8 @@ fn p1(input: &str, k_closest: usize) -> usize {
 fn p2(input: &str) -> usize {
     let num_coords = input.lines().count();
     let mut disjoint_set = DisjointSet::with_len(num_coords);
-    for (i1, coord1, i2, coord2) in parse_combinations_sorted_by_distance(input) {
+    for (i1, coord1, i2, coord2) in parse_combinations_sorted_by_distance(input)
+    {
         disjoint_set.join(i1, i2);
         if disjoint_set.sets().len() == 1 {
             return coord1.0 * coord2.0;
@@ -57,7 +58,9 @@ fn p2(input: &str) -> usize {
 
 type Point3 = (usize, usize, usize);
 
-fn parse_combinations_sorted_by_distance(input: &str) -> Vec<(usize, Point3, usize, Point3)> {
+fn parse_combinations_sorted_by_distance(
+    input: &str,
+) -> Vec<(usize, Point3, usize, Point3)> {
     input
         .lines()
         .map(|line| {

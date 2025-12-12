@@ -27,7 +27,8 @@ fn p1(input: &str) -> usize {
     input
         .lines()
         .map(|line| {
-            let (max1, max2) = line.chars().tuple_combinations::<(_, _)>().max().unwrap();
+            let (max1, max2) =
+                line.chars().tuple_combinations::<(_, _)>().max().unwrap();
             format!("{max1}{max2}").parse::<usize>().unwrap()
         })
         .sum()
@@ -55,8 +56,16 @@ fn max_combination(digits: &[usize], take: usize, prev: usize) -> usize {
     digits
         .iter()
         .enumerate()
-        .filter_map(|(i, value)| if value == max_value { Some(i) } else { None })
-        .map(|max_index| max_combination(&digits[max_index + 1..], take - 1, prev * 10 + max_value))
+        .filter_map(
+            |(i, value)| if value == max_value { Some(i) } else { None },
+        )
+        .map(|max_index| {
+            max_combination(
+                &digits[max_index + 1..],
+                take - 1,
+                prev * 10 + max_value,
+            )
+        })
         .max()
         .unwrap()
 }

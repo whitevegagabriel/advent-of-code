@@ -1,4 +1,6 @@
-use crate::common::{DOWN_USIZE, Point2, RIGHT_USIZE, parse_to_char_map_and_find, test};
+use crate::common::{
+    DOWN_USIZE, Point2, RIGHT_USIZE, parse_to_char_map_and_find, test,
+};
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet};
 
@@ -25,7 +27,9 @@ fn p2_input() {
 }
 
 fn p1(input: &str) -> usize {
-    let (splitters, Some(start)) = parse_to_char_map_and_find::<usize>(input, 'S') else {
+    let (splitters, Some(start)) =
+        parse_to_char_map_and_find::<usize>(input, 'S')
+    else {
         panic!("did not find target char")
     };
 
@@ -53,7 +57,9 @@ fn p1(input: &str) -> usize {
 }
 
 fn p2(input: &str) -> usize {
-    let (splitters, Some(start)) = parse_to_char_map_and_find::<usize>(input, 'S') else {
+    let (splitters, Some(start)) =
+        parse_to_char_map_and_find::<usize>(input, 'S')
+    else {
         panic!("did not find target char")
     };
 
@@ -75,9 +81,10 @@ fn p2(input: &str) -> usize {
         .collect_vec();
 
         // is None if any dependencies have not been computed yet
-        let maybe_realities = next_points.iter().try_fold(0, |acc, next_point| {
-            cache.get(next_point).map(|inner| inner + acc)
-        });
+        let maybe_realities =
+            next_points.iter().try_fold(0, |acc, next_point| {
+                cache.get(next_point).map(|inner| inner + acc)
+            });
 
         if next_points.is_empty() {
             cache.insert(point, 1);

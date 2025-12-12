@@ -73,7 +73,9 @@ fn p2(input: &str) -> usize {
                 .filter_map(|item| item.strip_circumfix('(', ')'))
                 .map(|item| {
                     let mut button = [0_f64; 10];
-                    for i in item.split(',').map(|num| num.parse::<usize>().unwrap()) {
+                    for i in
+                        item.split(',').map(|num| num.parse::<usize>().unwrap())
+                    {
                         button[i] = 1.0;
                     }
                     button
@@ -85,7 +87,10 @@ fn p2(input: &str) -> usize {
         .sum()
 }
 
-fn fewest_presses_xor(indicators_bitmask: u16, toggle_bitmasks: &[u16]) -> Option<usize> {
+fn fewest_presses_xor(
+    indicators_bitmask: u16,
+    toggle_bitmasks: &[u16],
+) -> Option<usize> {
     toggle_bitmasks
         .iter()
         .enumerate()
@@ -93,8 +98,11 @@ fn fewest_presses_xor(indicators_bitmask: u16, toggle_bitmasks: &[u16]) -> Optio
             if toggle == &indicators_bitmask {
                 Some(1)
             } else {
-                fewest_presses_xor(indicators_bitmask ^ toggle, &toggle_bitmasks[i + 1..])
-                    .map(|total| total + 1)
+                fewest_presses_xor(
+                    indicators_bitmask ^ toggle,
+                    &toggle_bitmasks[i + 1..],
+                )
+                .map(|total| total + 1)
             }
         })
         .min()

@@ -22,7 +22,8 @@ fn p1(input: &str) -> usize {
     inputs[6]
         .lines()
         .filter(|line| {
-            let (dims_str, counts_str) = line.split(':').collect_tuple().unwrap();
+            let (dims_str, counts_str) =
+                line.split(':').collect_tuple().unwrap();
             let (width, height) = dims_str
                 .split('x')
                 .map(|dim| dim.parse::<usize>().unwrap())

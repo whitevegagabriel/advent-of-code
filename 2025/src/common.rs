@@ -23,7 +23,13 @@ pub fn test<T: Debug + Eq, F: Fn(&str) -> T>(
     f: F,
     expected: T,
 ) {
-    test_with_params(file_name, module_path, |s: &str, _: ()| f(s), (), expected);
+    test_with_params(
+        file_name,
+        module_path,
+        |s: &str, _: ()| f(s),
+        (),
+        expected,
+    );
 }
 
 pub fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
@@ -35,7 +41,8 @@ pub fn test_with_params<P, T: Debug + Eq, F: Fn(&str, P) -> T>(
 ) {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     let module_name = module_path.split("::").last().unwrap();
-    let input_file = format!("{manifest_dir}/src/{module_name}/{file_name}.txt");
+    let input_file =
+        format!("{manifest_dir}/src/{module_name}/{file_name}.txt");
     let start = time::Instant::now();
     {
         let input = read_to_string(input_file).unwrap();
@@ -166,11 +173,15 @@ pub enum RotationDirection {
     Counterclockwise,
 }
 
-pub fn parse_to_usize_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point2<T>, usize> {
+pub fn parse_to_usize_map<T: TryFrom<usize> + Eq + Hash>(
+    input: &str,
+) -> HashMap<Point2<T>, usize> {
     parse_to_map_and_maybe_find(input, |c| c as usize - '0' as usize, None).0
 }
 
-pub fn parse_to_char_map<T: TryFrom<usize> + Eq + Hash>(input: &str) -> HashMap<Point2<T>, char> {
+pub fn parse_to_char_map<T: TryFrom<usize> + Eq + Hash>(
+    input: &str,
+) -> HashMap<Point2<T>, char> {
     parse_to_map_and_maybe_find(input, |c| c, None).0
 }
 
@@ -181,7 +192,11 @@ pub fn parse_to_char_map_and_find<T: TryFrom<usize> + Eq + Hash>(
     parse_to_map_and_maybe_find(input, |c| c, Some(find))
 }
 
-fn parse_to_map_and_maybe_find<T: TryFrom<usize> + Eq + Hash, V, F: Fn(char) -> V>(
+fn parse_to_map_and_maybe_find<
+    T: TryFrom<usize> + Eq + Hash,
+    V,
+    F: Fn(char) -> V,
+>(
     input: &str,
     mapper: F,
     find: Option<char>,
@@ -246,7 +261,9 @@ pub fn parse_to_set_and_find<T: TryFrom<usize> + Eq + Hash>(
     (set, found.expect("shouldhave found target char in input"))
 }
 
-pub fn get_cross_neighbors<T: Integer + Neg<Output = T> + Copy>(curr: Point2<T>) -> Vec<Point2<T>> {
+pub fn get_cross_neighbors<T: Integer + Neg<Output = T> + Copy>(
+    curr: Point2<T>,
+) -> Vec<Point2<T>> {
     [
         Vector2 {
             x: -T::one(),
@@ -270,7 +287,9 @@ pub fn get_cross_neighbors<T: Integer + Neg<Output = T> + Copy>(curr: Point2<T>)
     .collect()
 }
 
-pub fn get_cross_neighbors_with_direction<T: Integer + Neg<Output = T> + Copy>(
+pub fn get_cross_neighbors_with_direction<
+    T: Integer + Neg<Output = T> + Copy,
+>(
     curr: Point2<T>,
 ) -> Vec<(Point2<T>, Direction)> {
     [
@@ -366,7 +385,11 @@ pub trait AsPoint2<'a, T> {
     fn as_point2(&'a self) -> &'a Point2<T>;
 }
 
-pub fn visualize_points<'a, T: Copy + TryInto<usize> + 'a, P: AsPoint2<'a, T>>(
+pub fn visualize_points<
+    'a,
+    T: Copy + TryInto<usize> + 'a,
+    P: AsPoint2<'a, T>,
+>(
     points: &'a [P],
     width: usize,
     height: usize,
@@ -405,7 +428,10 @@ pub fn visualize<T: Num + Copy + Ord + TryInto<usize>>(
     canvas.iter().map(|chars| chars.iter().join("")).join("\n")
 }
 
-pub fn manhattan_dist<T: Num + Ord + Copy>(p1: &Point2<T>, p2: &Point2<T>) -> T {
+pub fn manhattan_dist<T: Num + Ord + Copy>(
+    p1: &Point2<T>,
+    p2: &Point2<T>,
+) -> T {
     let dist_x = if p1.x > p2.x {
         p1.x - p2.x
     } else {
@@ -447,7 +473,11 @@ pub fn parse_lines_to_tuples<T: traits::HomogeneousTuple<Item = I>, I>(
         .collect_vec()
 }
 
-pub fn parse_and_split_to_tuple<T: traits::HomogeneousTuple<Item = I>, P: Pattern, I>(
+pub fn parse_and_split_to_tuple<
+    T: traits::HomogeneousTuple<Item = I>,
+    P: Pattern,
+    I,
+>(
     line: &str,
     pat: P,
     parser: fn(&str) -> I,
